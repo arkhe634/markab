@@ -1,6 +1,7 @@
 mod error;
 mod gen_parser;
 mod parser;
+mod sequence_parser;
 mod string_parser;
 
 pub use crate::{
@@ -11,6 +12,11 @@ pub use crate::{
 		GenParserRequirement,
 	},
 	parser::Parser,
+	sequence_parser::{
+		SequenceParser,
+		SequenceParserError,
+		SequenceParserRequirement,
+	},
 	string_parser::{
 		StringParser,
 		StringParserError,
