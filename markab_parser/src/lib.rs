@@ -1,3 +1,4 @@
+pub mod character_parser;
 mod error;
 pub mod gen_parser;
 mod map_parser;
