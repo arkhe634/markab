@@ -21,7 +21,6 @@ where
 	mapper: F,
 	_a: PhantomData<&'a ()>,
 	_b: PhantomData<&'b ()>,
-	_q: PhantomData<Q>,
 }
 
 impl<'a, 'b, P, F, Q> MapParser<'a, 'b, P, F, Q>
@@ -37,7 +36,6 @@ where
 			mapper,
 			_a: PhantomData,
 			_b: PhantomData,
-			_q: PhantomData,
 		}
 	}
 }
