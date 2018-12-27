@@ -1,9 +1,9 @@
 use crate::{
+	gen_parser::GenParser,
+	map_parser::MapParser,
+	order_parser::OrderParser,
+	sequence_parser::SequenceParser,
 	Error,
-	GenParser,
-	MapParser,
-	OrderParser,
-	SequenceParser,
 };
 use std::fmt::Display;
 
