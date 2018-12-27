@@ -2,32 +2,25 @@ use crate::{
 	Error,
 	Parser,
 };
-use std::{
-	fmt::{
-		Formatter,
-		Result as FmtResult,
-	},
-	marker::PhantomData,
+use std::fmt::{
+	Formatter,
+	Result as FmtResult,
 };
 
-pub struct StringParser<'a, 'b>
+pub struct StringParser<'a>
 {
 	requirement: &'a str,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b> StringParser<'a, 'b>
+impl<'a> StringParser<'a>
 {
 	pub fn new(requirement: &'a str) -> Self
 	{
-		Self {
-			requirement,
-			_b: PhantomData,
-		}
+		Self { requirement }
 	}
 }
 
-impl<'a, 'b> Parser<'a, 'b> for StringParser<'a, 'b>
+impl<'a, 'b> Parser<'a, 'b> for StringParser<'a>
 {
 	type Error = StringParserError<'a, 'b>;
 	type Output = &'b str;
@@ -120,7 +113,7 @@ impl<'a, 'b> Error<'a, 'b> for StringParserError<'a, 'b>
 	}
 }
 
-pub fn string<'a, 'b>(requirement: &'a str) -> StringParser<'a, 'b>
+pub fn string(requirement: &str) -> StringParser
 {
 	StringParser::new(requirement)
 }
