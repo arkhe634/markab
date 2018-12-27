@@ -2,22 +2,25 @@ use crate::{
 	Error,
 	Parser,
 };
-use std::fmt::{
-	Display,
-	Formatter,
-	Result as FmtResult,
+use std::{
+	fmt::{
+		Display,
+		Formatter,
+		Result as FmtResult,
+	},
+	ops::Range,
 };
 
 pub struct CharacterClassParser<'a>
 {
 	not: bool,
 	chars: &'a [char],
-	ranges: &'a [(char, char)],
+	ranges: &'a [Range<char>],
 }
 
 impl<'a> CharacterClassParser<'a>
 {
-	pub fn new(not: bool, chars: &'a [char], ranges: &'a [(char, char)]) -> Self
+	pub fn new(not: bool, chars: &'a [char], ranges: &'a [Range<char>]) -> Self
 	{
 		Self { not, chars, ranges }
 	}
@@ -50,7 +53,7 @@ impl<'a, 'b> Parser<'a, 'b> for CharacterClassParser<'a>
 				}
 				for range in self.ranges
 				{
-					if range.0 <= next && next <= range.1
+					if range.start <= next && next <= range.end
 					{
 						return Err(CharacterClassParserError::new(
 							from,
@@ -74,7 +77,7 @@ impl<'a, 'b> Parser<'a, 'b> for CharacterClassParser<'a>
 				}
 				for range in self.ranges
 				{
-					if range.0 <= next && next <= range.1
+					if range.start <= next && next <= range.end
 					{
 						*pos += next.len_utf8();
 						return Ok(&src[from..*pos]);
@@ -107,12 +110,12 @@ pub struct CharacterClassParserRequirement<'a>
 {
 	not: bool,
 	chars: &'a [char],
-	ranges: &'a [(char, char)],
+	ranges: &'a [Range<char>],
 }
 
 impl<'a> CharacterClassParserRequirement<'a>
 {
-	pub fn new(not: bool, chars: &'a [char], ranges: &'a [(char, char)]) -> Self
+	pub fn new(not: bool, chars: &'a [char], ranges: &'a [Range<char>]) -> Self
 	{
 		Self { not, chars, ranges }
 	}
@@ -133,7 +136,7 @@ impl<'a> Display for CharacterClassParserRequirement<'a>
 		}
 		for range in self.ranges
 		{
-			write!(f, "{}-{}", range.0, range.1)?;
+			write!(f, "{}-{}", range.start, range.end)?;
 		}
 		Ok(())
 	}
@@ -208,7 +211,7 @@ impl<'a, 'b> Error<'a, 'b> for CharacterClassParserError<'a>
 pub fn character_class<'a>(
 	not: bool,
 	chars: &'a [char],
-	ranges: &'a [(char, char)],
+	ranges: &'a [Range<char>],
 ) -> CharacterClassParser<'a>
 {
 	CharacterClassParser::new(not, chars, ranges)
