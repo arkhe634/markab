@@ -119,3 +119,8 @@ impl<'a, 'b> Error<'a, 'b> for StringParserError<'a, 'b>
 		self.causes(f, depth + 1)
 	}
 }
+
+pub fn string<'a, 'b>(requirement: &'a str) -> StringParser<'a, 'b>
+{
+	StringParser::new(requirement)
+}

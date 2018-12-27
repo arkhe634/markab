@@ -30,6 +30,7 @@ pub use crate::{
 		SequenceParserRequirement,
 	},
 	string_parser::{
+		string,
 		StringParser,
 		StringParserError,
 	},
