@@ -12,7 +12,10 @@ pub mod sequence_parser;
 pub mod string_parser;
 
 pub use crate::{
+	character_class_parser::character_class,
+	character_parser::character,
 	error::Error,
 	parseable::Parseable,
 	parser::Parser,
+	string_parser::string,
 };
