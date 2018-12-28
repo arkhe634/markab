@@ -74,6 +74,32 @@ where
 		Ok(result)
 	}
 
+	fn skip(&self, src: &'b str, pos: &mut usize) -> Option<Self::Error>
+	{
+		let from = *pos;
+		for i in 0..self.min
+		{
+			if let Err(err) = self.requirement.parse(src, pos)
+			{
+				*pos = from;
+				return Some(RepetitionParserError::new(
+					from,
+					self.requirement(None),
+					i,
+					err,
+				));
+			}
+		}
+		for _ in self.min..self.max
+		{
+			if let Err(_) = self.requirement.parse(src, pos)
+			{
+				break;
+			}
+		}
+		None
+	}
+
 	fn requirement(&self, _: Option<&Self::RequirementContext>) -> Self::Requirement
 	{
 		RepetitionParserRequirement::new(self.requirement.requirement(None), self.min, self.max)

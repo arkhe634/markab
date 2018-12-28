@@ -67,6 +67,19 @@ where
 		Ok((first, second))
 	}
 
+	fn skip(&self, src: &'b str, pos: &mut usize) -> Option<Self::Error>
+	{
+		let from = *pos;
+		self.first
+			.skip(src, pos)
+			.map(|err| SequenceParserError::new(from, self.requirement(None), Left(err)))
+			.or_else(|| {
+				self.second
+					.skip(src, pos)
+					.map(|err| SequenceParserError::new(from, self.requirement(None), Right(err)))
+			})
+	}
+
 	fn requirement(&self, _: Option<&Self::RequirementContext>) -> Self::Requirement
 	{
 		SequenceParserRequirement::new(self.first.requirement(None), self.second.requirement(None))

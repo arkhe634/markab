@@ -73,6 +73,16 @@ where
 		))
 	}
 
+	fn skip(&self, src: &'b str, pos: &mut usize) -> Option<Self::Error>
+	{
+		let from = *pos;
+		self.first.skip(src, pos).and_then(|first| {
+			self.second
+				.skip(src, pos)
+				.map(|second| OrderParserError::new(from, self.requirement(None), (first, second)))
+		})
+	}
+
 	fn requirement(&self, _: Option<&Self::RequirementContext>) -> Self::Requirement
 	{
 		OrderParserRequirement::new(self.first.requirement(None), self.second.requirement(None))

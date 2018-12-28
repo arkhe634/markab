@@ -21,6 +21,11 @@ pub trait Parser<'a, 'b>
 
 	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>;
 
+	fn skip(&self, src: &'b str, pos: &mut usize) -> Option<Self::Error>
+	{
+		self.parse(src, pos).err()
+	}
+
 	fn requirement(&self, context: Option<&Self::RequirementContext>) -> Self::Requirement;
 
 	fn and_then<P>(self, next: P) -> SequenceParser<'a, 'b, Self, P>

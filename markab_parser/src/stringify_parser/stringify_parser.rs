@@ -47,9 +47,10 @@ where
 	{
 		let from = *pos;
 		self.requirement
-			.parse(src, pos)
-			.map(|_| &src[from..*pos])
-			.map_err(|err| StringifyParserError::new(from, self.requirement(None), err))
+			.skip(src, pos)
+			.map_or(Ok(&src[from..*pos]), |err| {
+				Err(StringifyParserError::new(from, self.requirement(None), err))
+			})
 	}
 
 	fn requirement(&self, _: Option<&Self::RequirementContext>) -> Self::Requirement

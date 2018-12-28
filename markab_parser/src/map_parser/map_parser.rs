@@ -60,6 +60,14 @@ where
 			.map_err(|err| MapParserError::new(from, self.requirement(None), err))
 	}
 
+	fn skip(&self, src: &'b str, pos: &mut usize) -> Option<Self::Error>
+	{
+		let from = *pos;
+		self.requirement
+			.skip(src, pos)
+			.map(|err| MapParserError::new(from, self.requirement(None), err))
+	}
+
 	fn requirement(&self, _: Option<&Self::RequirementContext>) -> Self::Requirement
 	{
 		MapParserRequirement::new(self.requirement.requirement(None))
