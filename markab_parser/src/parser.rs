@@ -2,6 +2,7 @@ use crate::{
 	gen_parser::GenParser,
 	map_parser::MapParser,
 	order_parser::OrderParser,
+	repetition_parser::RepetitionParser,
 	sequence_parser::SequenceParser,
 	Error,
 };
@@ -50,5 +51,12 @@ pub trait Parser<'a, 'b>
 		P: Parser<'a, 'b>,
 	{
 		GenParser::new(self, generator)
+	}
+
+	fn repeat(self, min: usize, max: usize) -> RepetitionParser<'a, 'b, Self>
+	where
+		Self: Sized,
+	{
+		RepetitionParser::new(self, min, max)
 	}
 }
