@@ -5,7 +5,7 @@
 //!
 //! Each methods returns a class implementing [Parser] trait,
 //! [CharacterParser], [CharacterClassParser], [StringParser],
-//! and returns a slice of the source string by calling the parse method of Parser trait.
+//! and returns a slice of the source string by calling the [parse] method of Parser trait.
 //!
 //! [character]: fn.character.html
 //! [character_class]: fn.character_class.html
@@ -14,6 +14,7 @@
 //! [CharacterParser]: character_parser/struct.CharacterParser.html
 //! [CharacterClassParser]: character_class_parser/struct.CharacterClassParser.html
 //! [StringParser]: string_parser/struct.StringParser.html
+//! [parse]: trait.Parser.html#tymethod.parse
 //! ```
 //! use markab_parser::{
 //! 	string,
@@ -51,6 +52,16 @@
 //! 	.stringify()
 //! 	.map(|num| num.parse::<usize>().unwrap());
 //! ```
+//!
+//! # Create new parser
+//! If the parser has parameters, you should implement [Parser] trait.
+//! If the parser does not have parameters, you should implement [Parseable] trait.
+//! Parseable trait provides static method [Parseable::parse] and
+//! [Parseable::get_parser] to get a parser instance for parser combination
+//!
+//! [Parseable]: trait.Parseable.html
+//! [Parseable::parse]: trait.Parseable.html#tymethod.parse
+//! [Parseable::get_parser]: trait.Parseable.html#method.get_parser
 
 pub mod character_class_parser;
 pub mod character_parser;
