@@ -61,6 +61,7 @@ mod parser;
 pub mod repetition_parser;
 pub mod sequence_parser;
 pub mod string_parser;
+pub mod stringify_parser;
 
 pub use crate::{
 	character_class_parser::character_class,
