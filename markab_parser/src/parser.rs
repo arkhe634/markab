@@ -7,7 +7,10 @@ use crate::{
 	stringify_parser::StringifyParser,
 	Error,
 };
-use std::fmt::Display;
+use std::{
+	fmt::Display,
+	usize::MAX,
+};
 
 pub trait Parser<'a, 'b>
 {
@@ -59,6 +62,20 @@ pub trait Parser<'a, 'b>
 		Self: Sized,
 	{
 		RepetitionParser::new(self, min, max)
+	}
+
+	fn zero_or_more(self) -> RepetitionParser<'a, 'b, Self>
+	where
+		Self: Sized,
+	{
+		RepetitionParser::new(self, 0, MAX)
+	}
+
+	fn one_or_more(self) -> RepetitionParser<'a, 'b, Self>
+	where
+		Self: Sized,
+	{
+		RepetitionParser::new(self, 1, MAX)
 	}
 
 	fn stringify(self) -> StringifyParser<'a, 'b, Self>
