@@ -111,6 +111,11 @@ impl<'a, 'b> Error<'a, 'b> for StringParserError<'a, 'b>
 		write!(f, ".\n")?;
 		self.causes(f, depth + 1)
 	}
+
+	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
+	{
+		self.print(f, depth)
+	}
 }
 
 pub fn string(requirement: &str) -> StringParser

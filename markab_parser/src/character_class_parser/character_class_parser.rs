@@ -206,6 +206,11 @@ impl<'a, 'b> Error<'a, 'b> for CharacterClassParserError<'a>
 		write!(f, ".\n")?;
 		self.causes(f, depth + 1)
 	}
+
+	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
+	{
+		self.print(f, depth)
+	}
 }
 
 pub fn character_class<'a>(

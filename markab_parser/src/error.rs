@@ -10,4 +10,5 @@ pub trait Error<'a, 'b>
 	fn result(&self, f: &mut Formatter) -> FmtResult;
 	fn causes(&self, f: &mut Formatter, depth: usize) -> FmtResult;
 	fn print(&self, f: &mut Formatter, depth: usize) -> FmtResult;
+	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult;
 }

@@ -147,6 +147,11 @@ where
 
 	fn print(&self, f: &mut Formatter, depth: usize) -> FmtResult
 	{
+		self.causes(f, depth)
+	}
+
+	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
+	{
 		for _ in 0..depth
 		{
 			write!(f, "\t")?;
