@@ -4,6 +4,7 @@ use crate::{
 	order_parser::OrderParser,
 	repetition_parser::RepetitionParser,
 	sequence_parser::SequenceParser,
+	stringify_parser::StringifyParser,
 	Error,
 };
 use std::fmt::Display;
@@ -58,5 +59,12 @@ pub trait Parser<'a, 'b>
 		Self: Sized,
 	{
 		RepetitionParser::new(self, min, max)
+	}
+
+	fn stringify(self) -> StringifyParser<'a, 'b, Self>
+	where
+		Self: Sized,
+	{
+		StringifyParser::new(self)
 	}
 }
