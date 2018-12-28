@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "markab_parser",
+]
+
+[patch.crates-io]
+markab_parser = { path = "markab_parser" }
