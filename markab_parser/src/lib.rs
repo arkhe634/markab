@@ -69,6 +69,7 @@ pub mod character_parser;
 mod error;
 pub mod gen_parser;
 mod map_parser;
+pub mod not_parser;
 pub mod order_parser;
 mod parseable;
 pub mod parseable_parser;
