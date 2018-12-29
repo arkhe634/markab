@@ -52,3 +52,13 @@ If the parser has parameters, you should implement `Parser` trait.
 If the parser does not have parameters, you should implement `Parseable` trait.
 Parseable trait provides static method `Parseable::parse` and
 `Parseable::get_parser` to get a parser instance for parser combination
+
+# Change Log
+
+## Version 0.1.0
+
+add primitive parsers.
+
+## Version 0.2.0
+
+add `AndParser` and `NotParser`.
