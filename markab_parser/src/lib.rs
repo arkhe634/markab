@@ -63,11 +63,13 @@
 //! [Parseable::parse]: trait.Parseable.html#tymethod.parse
 //! [Parseable::get_parser]: trait.Parseable.html#method.get_parser
 
+pub mod and_parser;
 pub mod character_class_parser;
 pub mod character_parser;
 mod error;
 pub mod gen_parser;
 mod map_parser;
+pub mod not_parser;
 pub mod order_parser;
 mod parseable;
 pub mod parseable_parser;
@@ -78,9 +80,11 @@ pub mod string_parser;
 pub mod stringify_parser;
 
 pub use crate::{
+	and_parser::and,
 	character_class_parser::character_class,
 	character_parser::character,
 	error::Error,
+	not_parser::not,
 	parseable::Parseable,
 	parser::Parser,
 	string_parser::string,
