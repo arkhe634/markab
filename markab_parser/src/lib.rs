@@ -63,6 +63,7 @@
 //! [Parseable::parse]: trait.Parseable.html#tymethod.parse
 //! [Parseable::get_parser]: trait.Parseable.html#method.get_parser
 
+pub mod and_parser;
 pub mod character_class_parser;
 pub mod character_parser;
 mod error;
