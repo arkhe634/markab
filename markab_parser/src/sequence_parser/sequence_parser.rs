@@ -16,6 +16,7 @@ use std::{
 	marker::PhantomData,
 };
 
+#[derive(Debug)]
 pub struct SequenceParser<'a, 'b, P, Q>
 where
 	P: Parser<'a, 'b>,
@@ -86,6 +87,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct SequenceParserRequirement<'a, 'b, P, Q>
 where
 	P: Parser<'a, 'b>,
@@ -127,6 +129,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct SequenceParserError<'a, 'b, P, Q>
 where
 	P: Parser<'a, 'b>,

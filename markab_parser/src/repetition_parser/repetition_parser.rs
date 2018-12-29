@@ -12,6 +12,7 @@ use std::{
 	usize::MAX,
 };
 
+#[derive(Debug)]
 pub struct RepetitionParser<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -106,6 +107,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct RepetitionParserRequirement<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -146,6 +148,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct RepetitionParserError<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,

@@ -5,6 +5,7 @@ use crate::{
 };
 use std::{
 	fmt::{
+		Debug,
 		Display,
 		Formatter,
 		Result as FmtResult,
@@ -35,6 +36,18 @@ where
 	}
 }
 
+impl<'a, 'b, P> Debug for ParseableParser<'a, 'b, P>
+where
+	P: Parseable<'a, 'b>,
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		f.debug_struct("ParseableParser")
+			.field("type", &P::name())
+			.finish()
+	}
+}
+
 impl<'a, 'b, P> Parser<'a, 'b> for ParseableParser<'a, 'b, P>
 where
 	P: Parseable<'a, 'b>,
@@ -62,6 +75,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct ParseableParserError<'a, 'b, P>
 where
 	P: Parseable<'a, 'b>,

@@ -11,6 +11,7 @@ use std::{
 	marker::PhantomData,
 };
 
+#[derive(Debug)]
 pub struct StringifyParser<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -59,6 +60,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct StringifyParserRequirement<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -86,6 +88,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct StringifyParserError<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,

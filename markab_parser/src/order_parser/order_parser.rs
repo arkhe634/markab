@@ -16,6 +16,7 @@ use std::{
 	marker::PhantomData,
 };
 
+#[derive(Debug)]
 pub struct OrderParser<'a, 'b, P, Q>
 where
 	P: Parser<'a, 'b>,
@@ -89,6 +90,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct OrderParserRequirement<'a, 'b, P, Q>
 where
 	P: Parser<'a, 'b>,
@@ -130,6 +132,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct OrderParserError<'a, 'b, P, Q>
 where
 	P: Parser<'a, 'b>,

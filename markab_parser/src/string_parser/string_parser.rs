@@ -8,6 +8,7 @@ use std::fmt::{
 	Result as FmtResult,
 };
 
+#[derive(Debug)]
 pub struct StringParser<'a>
 {
 	requirement: &'a str,
@@ -49,6 +50,7 @@ impl<'a, 'b> Parser<'a, 'b> for StringParser<'a>
 	}
 }
 
+#[derive(Debug)]
 pub struct StringParserError<'a, 'b>
 {
 	from: usize,

@@ -4,6 +4,7 @@ use crate::{
 };
 use std::{
 	fmt::{
+		Debug,
 		Display,
 		Formatter,
 		Result as FmtResult,
@@ -37,6 +38,21 @@ where
 			_a: PhantomData,
 			_b: PhantomData,
 		}
+	}
+}
+
+impl<'a, 'b, P, F, Q> Debug for MapParser<'a, 'b, P, F, Q>
+where
+	P: Parser<'a, 'b>,
+	F: 'static + Fn(P::Output) -> Q,
+	Q: 'b,
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		f.debug_struct("MapParser")
+			.field("requirement", &self.requirement)
+			.field("mapper", &"..")
+			.finish()
 	}
 }
 
@@ -74,6 +90,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct MapParserRequirement<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -106,6 +123,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct MapParserError<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,

@@ -8,6 +8,7 @@ use std::fmt::{
 	Result as FmtResult,
 };
 
+#[derive(Debug)]
 pub struct CharacterParser
 {
 	requirement: char,
@@ -61,6 +62,7 @@ impl<'a, 'b> Parser<'a, 'b> for CharacterParser
 	}
 }
 
+#[derive(Debug)]
 pub struct CharacterParserError
 {
 	from: usize,
