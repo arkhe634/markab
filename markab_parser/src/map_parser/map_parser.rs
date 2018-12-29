@@ -16,7 +16,6 @@ pub struct MapParser<'a, 'b, P, F, Q>
 where
 	P: Parser<'a, 'b>,
 	F: 'static + Fn(P::Output) -> Q,
-	Q: 'b,
 {
 	requirement: P,
 	mapper: F,
@@ -28,7 +27,6 @@ impl<'a, 'b, P, F, Q> MapParser<'a, 'b, P, F, Q>
 where
 	P: Parser<'a, 'b>,
 	F: 'static + Fn(P::Output) -> Q,
-	Q: 'b,
 {
 	pub fn new(requirement: P, mapper: F) -> Self
 	{
@@ -45,7 +43,6 @@ impl<'a, 'b, P, F, Q> Debug for MapParser<'a, 'b, P, F, Q>
 where
 	P: Parser<'a, 'b>,
 	F: 'static + Fn(P::Output) -> Q,
-	Q: 'b,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -60,7 +57,6 @@ impl<'a, 'b, P, F, Q> Parser<'a, 'b> for MapParser<'a, 'b, P, F, Q>
 where
 	P: Parser<'a, 'b>,
 	F: 'static + Fn(P::Output) -> Q,
-	Q: 'b,
 {
 	type Error = MapParserError<'a, 'b, P>;
 	type Output = Q;
