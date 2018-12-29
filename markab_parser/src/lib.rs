@@ -80,9 +80,11 @@ pub mod string_parser;
 pub mod stringify_parser;
 
 pub use crate::{
+	and_parser::and,
 	character_class_parser::character_class,
 	character_parser::character,
 	error::Error,
+	not_parser::not,
 	parseable::Parseable,
 	parser::Parser,
 	string_parser::string,
