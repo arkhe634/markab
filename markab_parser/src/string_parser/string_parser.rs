@@ -3,6 +3,7 @@ use crate::{
 	Parser,
 };
 use std::fmt::{
+	Display,
 	Formatter,
 	Result as FmtResult,
 };
@@ -115,6 +116,14 @@ impl<'a, 'b> Error<'a, 'b> for StringParserError<'a, 'b>
 	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
 	{
 		self.print(f, depth)
+	}
+}
+
+impl<'a, 'b> Display for StringParserError<'a, 'b>
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		self.print(f, 0)
 	}
 }
 

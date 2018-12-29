@@ -158,3 +158,13 @@ where
 		self.causes(f, depth + 1)
 	}
 }
+
+impl<'a, 'b, P> Display for StringifyParserError<'a, 'b, P>
+where
+	P: Parser<'a, 'b>,
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		self.print(f, 0)
+	}
+}

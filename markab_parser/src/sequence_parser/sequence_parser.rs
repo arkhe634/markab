@@ -210,3 +210,14 @@ where
 		self.print(f, depth)
 	}
 }
+
+impl<'a, 'b, P, Q> Display for SequenceParserError<'a, 'b, P, Q>
+where
+	P: Parser<'a, 'b>,
+	Q: Parser<'a, 'b>,
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		self.print(f, 0)
+	}
+}

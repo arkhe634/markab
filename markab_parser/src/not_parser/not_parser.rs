@@ -174,6 +174,17 @@ where
 	}
 }
 
+impl<'a, 'b, P> Display for NotParserError<'a, 'b, P>
+where
+	P: Parser<'a, 'b>,
+	'a: 'b,
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		self.print(f, 0)
+	}
+}
+
 pub fn not<'a, 'b, P>(parser: P) -> NotParser<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,

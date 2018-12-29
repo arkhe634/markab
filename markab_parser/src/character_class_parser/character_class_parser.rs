@@ -213,6 +213,14 @@ impl<'a, 'b> Error<'a, 'b> for CharacterClassParserError<'a>
 	}
 }
 
+impl<'a> Display for CharacterClassParserError<'a>
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		self.print(f, 0)
+	}
+}
+
 pub fn character_class<'a>(
 	not: bool,
 	chars: &'a [char],
