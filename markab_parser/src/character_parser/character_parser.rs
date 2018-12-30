@@ -3,10 +3,12 @@ use crate::{
 	Parser,
 };
 use std::fmt::{
+	Display,
 	Formatter,
 	Result as FmtResult,
 };
 
+#[derive(Debug)]
 pub struct CharacterParser
 {
 	requirement: char,
@@ -60,6 +62,7 @@ impl<'a, 'b> Parser<'a, 'b> for CharacterParser
 	}
 }
 
+#[derive(Debug)]
 pub struct CharacterParserError
 {
 	from: usize,
@@ -124,6 +127,14 @@ impl<'a, 'b> Error<'a, 'b> for CharacterParserError
 	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
 	{
 		self.print(f, depth)
+	}
+}
+
+impl Display for CharacterParserError
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		self.print(f, 0)
 	}
 }
 

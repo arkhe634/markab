@@ -39,9 +39,9 @@ let parser = character('1');
 // require "12" and return ("1","2")
 let seq = parser.and_then(character('2'));
 // require "1" or "2" and return Either("1","2")
-let ord = character_class(false, &``, &`'1'..'2'`);
+let ord = character_class(false, &[], &['1'..'2']);
 // require `0-9`+ and return as usize
-let map = character_class(false, &``, &`'0'..'9'`)
+let map = character_class(false, &[], &['0'..'9'])
 	.one_or_more()
 	.stringify()
 	.map(|num| num.parse::<usize>().unwrap());
@@ -62,3 +62,7 @@ add primitive parsers.
 ## Version 0.2.0
 
 add `AndParser` and `NotParser`.
+
+## Version 0.3.0
+
+add `Debug` and `Display` implementations for types.
