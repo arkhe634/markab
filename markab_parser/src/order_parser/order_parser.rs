@@ -16,6 +16,7 @@ use std::{
 	marker::PhantomData,
 };
 
+#[derive(Debug)]
 pub struct OrderParser<'a, 'b, P, Q>
 where
 	P: Parser<'a, 'b>,
@@ -89,6 +90,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct OrderParserRequirement<'a, 'b, P, Q>
 where
 	P: Parser<'a, 'b>,
@@ -130,6 +132,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct OrderParserError<'a, 'b, P, Q>
 where
 	P: Parser<'a, 'b>,
@@ -204,5 +207,16 @@ where
 	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
 	{
 		self.print(f, depth)
+	}
+}
+
+impl<'a, 'b, P, Q> Display for OrderParserError<'a, 'b, P, Q>
+where
+	P: Parser<'a, 'b>,
+	Q: Parser<'a, 'b>,
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		self.print(f, 0)
 	}
 }

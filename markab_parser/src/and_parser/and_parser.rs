@@ -11,6 +11,7 @@ use std::{
 	marker::PhantomData,
 };
 
+#[derive(Debug)]
 pub struct AndParser<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -61,6 +62,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct AndParserRequirement<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -88,6 +90,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct AndParserError<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,

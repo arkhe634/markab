@@ -11,6 +11,7 @@ use std::{
 	marker::PhantomData,
 };
 
+#[derive(Debug)]
 pub struct StringifyParser<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -59,6 +60,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct StringifyParserRequirement<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -86,6 +88,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct StringifyParserError<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -156,5 +159,15 @@ where
 		self.result(f)?;
 		write!(f, ".\n")?;
 		self.causes(f, depth + 1)
+	}
+}
+
+impl<'a, 'b, P> Display for StringifyParserError<'a, 'b, P>
+where
+	P: Parser<'a, 'b>,
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		self.print(f, 0)
 	}
 }

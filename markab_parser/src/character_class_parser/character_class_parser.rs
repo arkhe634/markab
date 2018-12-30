@@ -11,6 +11,7 @@ use std::{
 	ops::Range,
 };
 
+#[derive(Debug)]
 pub struct CharacterClassParser<'a>
 {
 	not: bool,
@@ -106,6 +107,7 @@ impl<'a, 'b> Parser<'a, 'b> for CharacterClassParser<'a>
 	}
 }
 
+#[derive(Debug)]
 pub struct CharacterClassParserRequirement<'a>
 {
 	not: bool,
@@ -142,6 +144,7 @@ impl<'a> Display for CharacterClassParserRequirement<'a>
 	}
 }
 
+#[derive(Debug)]
 pub struct CharacterClassParserError<'a>
 {
 	from: usize,
@@ -210,6 +213,14 @@ impl<'a, 'b> Error<'a, 'b> for CharacterClassParserError<'a>
 	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
 	{
 		self.print(f, depth)
+	}
+}
+
+impl<'a> Display for CharacterClassParserError<'a>
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		self.print(f, 0)
 	}
 }
 

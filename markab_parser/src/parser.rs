@@ -8,15 +8,18 @@ use crate::{
 	Error,
 };
 use std::{
-	fmt::Display,
+	fmt::{
+		Debug,
+		Display,
+	},
 	usize::MAX,
 };
 
-pub trait Parser<'a, 'b>
+pub trait Parser<'a, 'b>: Debug
 {
 	type Error: Error<'a, 'b>;
 	type Output;
-	type Requirement: Display;
+	type Requirement: Debug + Display;
 	type RequirementContext;
 
 	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>;

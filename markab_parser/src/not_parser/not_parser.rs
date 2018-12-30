@@ -11,6 +11,7 @@ use std::{
 	marker::PhantomData,
 };
 
+#[derive(Debug)]
 pub struct NotParser<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -66,6 +67,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct NotParserRequirement<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -96,6 +98,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct NotParserError<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -171,6 +174,17 @@ where
 	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
 	{
 		self.print(f, depth)
+	}
+}
+
+impl<'a, 'b, P> Display for NotParserError<'a, 'b, P>
+where
+	P: Parser<'a, 'b>,
+	'a: 'b,
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		self.print(f, 0)
 	}
 }
 

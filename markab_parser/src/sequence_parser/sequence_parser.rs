@@ -16,6 +16,7 @@ use std::{
 	marker::PhantomData,
 };
 
+#[derive(Debug)]
 pub struct SequenceParser<'a, 'b, P, Q>
 where
 	P: Parser<'a, 'b>,
@@ -86,6 +87,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct SequenceParserRequirement<'a, 'b, P, Q>
 where
 	P: Parser<'a, 'b>,
@@ -127,6 +129,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct SequenceParserError<'a, 'b, P, Q>
 where
 	P: Parser<'a, 'b>,
@@ -208,5 +211,16 @@ where
 	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
 	{
 		self.print(f, depth)
+	}
+}
+
+impl<'a, 'b, P, Q> Display for SequenceParserError<'a, 'b, P, Q>
+where
+	P: Parser<'a, 'b>,
+	Q: Parser<'a, 'b>,
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		self.print(f, 0)
 	}
 }

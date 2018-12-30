@@ -4,6 +4,7 @@ use crate::{
 };
 use std::{
 	fmt::{
+		Debug,
 		Display,
 		Formatter,
 		Result as FmtResult,
@@ -15,7 +16,6 @@ pub struct MapParser<'a, 'b, P, F, Q>
 where
 	P: Parser<'a, 'b>,
 	F: 'static + Fn(P::Output) -> Q,
-	Q: 'b,
 {
 	requirement: P,
 	mapper: F,
@@ -27,7 +27,6 @@ impl<'a, 'b, P, F, Q> MapParser<'a, 'b, P, F, Q>
 where
 	P: Parser<'a, 'b>,
 	F: 'static + Fn(P::Output) -> Q,
-	Q: 'b,
 {
 	pub fn new(requirement: P, mapper: F) -> Self
 	{
@@ -40,11 +39,24 @@ where
 	}
 }
 
+impl<'a, 'b, P, F, Q> Debug for MapParser<'a, 'b, P, F, Q>
+where
+	P: Parser<'a, 'b>,
+	F: 'static + Fn(P::Output) -> Q,
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		f.debug_struct("MapParser")
+			.field("requirement", &self.requirement)
+			.field("mapper", &"..")
+			.finish()
+	}
+}
+
 impl<'a, 'b, P, F, Q> Parser<'a, 'b> for MapParser<'a, 'b, P, F, Q>
 where
 	P: Parser<'a, 'b>,
 	F: 'static + Fn(P::Output) -> Q,
-	Q: 'b,
 {
 	type Error = MapParserError<'a, 'b, P>;
 	type Output = Q;
@@ -74,6 +86,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct MapParserRequirement<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -106,6 +119,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct MapParserError<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -172,5 +186,15 @@ where
 		self.result(f)?;
 		write!(f, ".\n")?;
 		self.causes(f, depth + 1)
+	}
+}
+
+impl<'a, 'b, P> Display for MapParserError<'a, 'b, P>
+where
+	P: Parser<'a, 'b>,
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		self.print(f, 0)
 	}
 }

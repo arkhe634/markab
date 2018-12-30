@@ -12,6 +12,7 @@ use std::{
 	usize::MAX,
 };
 
+#[derive(Debug)]
 pub struct RepetitionParser<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -106,6 +107,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct RepetitionParserRequirement<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -146,6 +148,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct RepetitionParserError<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
@@ -219,5 +222,15 @@ where
 	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
 	{
 		self.print(f, depth)
+	}
+}
+
+impl<'a, 'b, P> Display for RepetitionParserError<'a, 'b, P>
+where
+	P: Parser<'a, 'b>,
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		self.print(f, 0)
 	}
 }

@@ -9,6 +9,7 @@ use either::{
 };
 use std::{
 	fmt::{
+		Debug,
 		Display,
 		Formatter,
 		Result as FmtResult,
@@ -42,6 +43,21 @@ where
 			_a: PhantomData,
 			_b: PhantomData,
 		}
+	}
+}
+
+impl<'a, 'b, P, F, Q> Debug for GenParser<'a, 'b, P, F, Q>
+where
+	P: Parser<'a, 'b>,
+	F: 'static + Fn(&P::Output) -> Q,
+	Q: Parser<'a, 'b>,
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		f.debug_struct("GenParser")
+			.field("requirement", &self.requirement)
+			.field("generator", &"..")
+			.finish()
 	}
 }
 
@@ -100,6 +116,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct GenParserRequirement<'a, 'b, P, Q>
 where
 	P: Parser<'a, 'b>,
@@ -151,6 +168,7 @@ where
 	}
 }
 
+#[derive(Debug)]
 pub struct GenParserError<'a, 'b, P, Q>
 where
 	P: Parser<'a, 'b>,
@@ -232,5 +250,16 @@ where
 	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
 	{
 		self.print(f, depth)
+	}
+}
+
+impl<'a, 'b, P, Q> Display for GenParserError<'a, 'b, P, Q>
+where
+	P: Parser<'a, 'b>,
+	Q: Parser<'a, 'b>,
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		self.print(f, 0)
 	}
 }
