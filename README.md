@@ -62,3 +62,7 @@ add primitive parsers.
 ## Version 0.2.0
 
 add `AndParser` and `NotParser`.
+
+## Version 0.3.0
+
+add `Debug` and `Display` implementations for types.
