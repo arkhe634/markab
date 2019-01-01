@@ -1,8 +1,11 @@
-mod character_class_parser;
+mod error;
+mod parser;
+mod requirement;
+mod utility;
 
-pub use self::character_class_parser::{
-	character_class,
-	CharacterClassParser,
-	CharacterClassParserError,
-	CharacterClassParserRequirement,
+pub use self::{
+	error::CharacterClassParserError,
+	parser::CharacterClassParser,
+	requirement::CharacterClassParserRequirement,
+	utility::character_class,
 };

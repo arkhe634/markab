@@ -1,8 +1,11 @@
-mod not_parser;
+mod error;
+mod parser;
+mod requirement;
+mod utility;
 
-pub use self::not_parser::{
-	not,
-	NotParser,
-	NotParserError,
-	NotParserRequirement,
+pub use self::{
+	error::NotParserError,
+	parser::NotParser,
+	requirement::NotParserRequirement,
+	utility::not,
 };
