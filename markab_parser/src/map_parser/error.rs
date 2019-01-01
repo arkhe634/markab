@@ -15,7 +15,7 @@ where
 	P: Parser<'a, 'b>,
 {
 	from: usize,
-	requirement: MapParserRequirement<'a, 'b, P>,
+	requirement: MapParserRequirement<'a, 'b, P::Requirement>,
 	cause: P::Error,
 }
 
@@ -23,7 +23,11 @@ impl<'a, 'b, P> MapParserError<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
 {
-	pub fn new(from: usize, requirement: MapParserRequirement<'a, 'b, P>, cause: P::Error) -> Self
+	pub fn new(
+		from: usize,
+		requirement: MapParserRequirement<'a, 'b, P::Requirement>,
+		cause: P::Error,
+	) -> Self
 	{
 		Self {
 			from,

@@ -62,7 +62,7 @@ where
 {
 	type Error = MapParserError<'a, 'b, P>;
 	type Output = Q;
-	type Requirement = MapParserRequirement<'a, 'b, P>;
+	type Requirement = MapParserRequirement<'a, 'b, P::Requirement>;
 	type RequirementContext = ();
 
 	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>

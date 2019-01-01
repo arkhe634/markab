@@ -1,36 +1,45 @@
-use crate::Parser;
-use std::fmt::{
-	Display,
-	Formatter,
-	Result as FmtResult,
+use std::{
+	fmt::{
+		Debug,
+		Display,
+		Formatter,
+		Result as FmtResult,
+	},
+	marker::PhantomData,
 };
 
 #[derive(Debug)]
-pub struct MapParserRequirement<'a, 'b, P>
+pub struct MapParserRequirement<'a, 'b, R>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 {
-	requirement: P::Requirement,
+	requirement: R,
+	_a: PhantomData<&'a ()>,
+	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, P> MapParserRequirement<'a, 'b, P>
+impl<'a, 'b, R> MapParserRequirement<'a, 'b, R>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 {
-	pub fn new(requirement: P::Requirement) -> Self
+	pub fn new(requirement: R) -> Self
 	{
-		Self { requirement }
+		Self {
+			requirement,
+			_a: PhantomData,
+			_b: PhantomData,
+		}
 	}
 
-	pub fn requirement(&self) -> &P::Requirement
+	pub fn requirement(&self) -> &R
 	{
 		&self.requirement
 	}
 }
 
-impl<'a, 'b, P> Display for MapParserRequirement<'a, 'b, P>
+impl<'a, 'b, R> Display for MapParserRequirement<'a, 'b, R>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
