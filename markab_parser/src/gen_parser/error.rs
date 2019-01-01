@@ -1,7 +1,6 @@
 use crate::{
 	gen_parser::GenParserRequirement,
 	Error,
-	Parser,
 };
 use either::{
 	Either,
@@ -9,31 +8,36 @@ use either::{
 	Right,
 };
 use std::fmt::{
+	Debug,
 	Display,
 	Formatter,
 	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct GenParserError<'a, 'b, P, Q>
+pub struct GenParserError<'a, 'b, R1, R2, E1, E2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
+	E1: Error<'a, 'b>,
+	E2: Error<'a, 'b>,
 {
 	from: usize,
-	requirement: GenParserRequirement<'a, 'b, P, Q>,
-	cause: Either<P::Error, Q::Error>,
+	requirement: GenParserRequirement<'a, 'b, R1, R2>,
+	cause: Either<E1, E2>,
 }
 
-impl<'a, 'b, P, Q> GenParserError<'a, 'b, P, Q>
+impl<'a, 'b, R1, R2, E1, E2> GenParserError<'a, 'b, R1, R2, E1, E2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
+	E1: Error<'a, 'b>,
+	E2: Error<'a, 'b>,
 {
 	pub fn new(
 		from: usize,
-		requirement: GenParserRequirement<'a, 'b, P, Q>,
-		cause: Either<P::Error, Q::Error>,
+		requirement: GenParserRequirement<'a, 'b, R1, R2>,
+		cause: Either<E1, E2>,
 	) -> Self
 	{
 		Self {
@@ -44,10 +48,12 @@ where
 	}
 }
 
-impl<'a, 'b, P, Q> Error<'a, 'b> for GenParserError<'a, 'b, P, Q>
+impl<'a, 'b, R1, R2, E1, E2> Error<'a, 'b> for GenParserError<'a, 'b, R1, R2, E1, E2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
+	E1: Error<'a, 'b>,
+	E2: Error<'a, 'b>,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -99,10 +105,12 @@ where
 	}
 }
 
-impl<'a, 'b, P, Q> Display for GenParserError<'a, 'b, P, Q>
+impl<'a, 'b, R1, R2, E1, E2> Display for GenParserError<'a, 'b, R1, R2, E1, E2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
+	E1: Error<'a, 'b>,
+	E2: Error<'a, 'b>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

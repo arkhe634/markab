@@ -68,9 +68,9 @@ where
 	F: 'static + Fn(&P::Output) -> Q,
 	Q: Parser<'a, 'b>,
 {
-	type Error = GenParserError<'a, 'b, P, Q>;
+	type Error = GenParserError<'a, 'b, P::Requirement, Q::Requirement, P::Error, Q::Error>;
 	type Output = (P::Output, Q::Output);
-	type Requirement = GenParserRequirement<'a, 'b, P, Q>;
+	type Requirement = GenParserRequirement<'a, 'b, P::Requirement, Q::Requirement>;
 	type RequirementContext = Q;
 
 	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>

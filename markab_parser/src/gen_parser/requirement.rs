@@ -1,48 +1,55 @@
-use crate::Parser;
-use std::fmt::{
-	Display,
-	Formatter,
-	Result as FmtResult,
+use std::{
+	fmt::{
+		Debug,
+		Display,
+		Formatter,
+		Result as FmtResult,
+	},
+	marker::PhantomData,
 };
 
 #[derive(Debug)]
-pub struct GenParserRequirement<'a, 'b, P, Q>
+pub struct GenParserRequirement<'a, 'b, R1, R2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
 {
-	requirement: P::Requirement,
-	generated: Option<Q::Requirement>,
+	requirement: R1,
+	generated: Option<R2>,
+	_a: PhantomData<&'a ()>,
+	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, P, Q> GenParserRequirement<'a, 'b, P, Q>
+impl<'a, 'b, R1, R2> GenParserRequirement<'a, 'b, R1, R2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
 {
-	pub fn new(requirement: P::Requirement, generated: Option<Q::Requirement>) -> Self
+	pub fn new(requirement: R1, generated: Option<R2>) -> Self
 	{
 		Self {
 			requirement,
 			generated,
+			_a: PhantomData,
+			_b: PhantomData,
 		}
 	}
 
-	pub fn first(&self) -> &P::Requirement
+	pub fn first(&self) -> &R1
 	{
 		&self.requirement
 	}
 
-	pub fn second(&self) -> Option<&Q::Requirement>
+	pub fn second(&self) -> Option<&R2>
 	{
 		self.generated.as_ref()
 	}
 }
 
-impl<'a, 'b, P, Q> Display for GenParserRequirement<'a, 'b, P, Q>
+impl<'a, 'b, R1, R2> Display for GenParserRequirement<'a, 'b, R1, R2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
