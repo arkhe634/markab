@@ -35,9 +35,9 @@ impl<'a, 'b, P> Parser<'a, 'b> for AndParser<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
 {
-	type Error = AndParserError<'a, 'b, P>;
+	type Error = AndParserError<'a, 'b, P::Requirement, P::Error>;
 	type Output = P::Output;
-	type Requirement = AndParserRequirement<'a, 'b, P>;
+	type Requirement = AndParserRequirement<'a, 'b, P::Requirement>;
 	type RequirementContext = ();
 
 	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>
