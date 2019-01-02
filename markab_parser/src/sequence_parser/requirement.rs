@@ -1,45 +1,55 @@
-use crate::Parser;
-use std::fmt::{
-	Display,
-	Formatter,
-	Result as FmtResult,
+use std::{
+	fmt::{
+		Debug,
+		Display,
+		Formatter,
+		Result as FmtResult,
+	},
+	marker::PhantomData,
 };
 
 #[derive(Debug)]
-pub struct SequenceParserRequirement<'a, 'b, P, Q>
+pub struct SequenceParserRequirement<'a, 'b, R1, R2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
 {
-	first: P::Requirement,
-	second: Q::Requirement,
+	first: R1,
+	second: R2,
+	_a: PhantomData<&'a ()>,
+	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, P, Q> SequenceParserRequirement<'a, 'b, P, Q>
+impl<'a, 'b, R1, R2> SequenceParserRequirement<'a, 'b, R1, R2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
 {
-	pub fn new(first: P::Requirement, second: Q::Requirement) -> Self
+	pub fn new(first: R1, second: R2) -> Self
 	{
-		Self { first, second }
+		Self {
+			first,
+			second,
+			_a: PhantomData,
+			_b: PhantomData,
+		}
 	}
 
-	pub fn first(&self) -> &P::Requirement
+	pub fn first(&self) -> &R1
 	{
 		&self.first
 	}
 
-	pub fn second(&self) -> &Q::Requirement
+	pub fn second(&self) -> &R2
 	{
 		&self.second
 	}
 }
 
-impl<'a, 'b, P, Q> Display for SequenceParserRequirement<'a, 'b, P, Q>
+impl<'a, 'b, R1, R2> Display for SequenceParserRequirement<'a, 'b, R1, R2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

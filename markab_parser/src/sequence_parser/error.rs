@@ -1,53 +1,66 @@
 use crate::{
 	sequence_parser::requirement::SequenceParserRequirement,
 	Error,
-	Parser,
 };
 use either::{
 	Either,
 	Left,
 	Right,
 };
-use std::fmt::{
-	Display,
-	Formatter,
-	Result as FmtResult,
+use std::{
+	fmt::{
+		Debug,
+		Display,
+		Formatter,
+		Result as FmtResult,
+	},
+	marker::PhantomData,
 };
 
 #[derive(Debug)]
-pub struct SequenceParserError<'a, 'b, P, Q>
+pub struct SequenceParserError<'a, 'b, R1, R2, E1, E2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
+	E1: Error<'a, 'b>,
+	E2: Error<'a, 'b>,
 {
 	from: usize,
-	requirement: SequenceParserRequirement<'a, 'b, P, Q>,
-	cause: Either<P::Error, Q::Error>,
+	requirement: SequenceParserRequirement<'a, 'b, R1, R2>,
+	cause: Either<E1, E2>,
+	_a: PhantomData<&'a ()>,
+	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, P, Q> SequenceParserError<'a, 'b, P, Q>
+impl<'a, 'b, R1, R2, E1, E2> SequenceParserError<'a, 'b, R1, R2, E1, E2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
+	E1: Error<'a, 'b>,
+	E2: Error<'a, 'b>,
 {
 	pub fn new(
 		from: usize,
-		requirement: SequenceParserRequirement<'a, 'b, P, Q>,
-		cause: Either<P::Error, Q::Error>,
+		requirement: SequenceParserRequirement<'a, 'b, R1, R2>,
+		cause: Either<E1, E2>,
 	) -> Self
 	{
 		Self {
 			from,
 			requirement,
 			cause,
+			_a: PhantomData,
+			_b: PhantomData,
 		}
 	}
 }
 
-impl<'a, 'b, P, Q> Error<'a, 'b> for SequenceParserError<'a, 'b, P, Q>
+impl<'a, 'b, R1, R2, E1, E2> Error<'a, 'b> for SequenceParserError<'a, 'b, R1, R2, E1, E2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
+	E1: Error<'a, 'b>,
+	E2: Error<'a, 'b>,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -99,10 +112,12 @@ where
 	}
 }
 
-impl<'a, 'b, P, Q> Display for SequenceParserError<'a, 'b, P, Q>
+impl<'a, 'b, R1, R2, E1, E2> Display for SequenceParserError<'a, 'b, R1, R2, E1, E2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
+	E1: Error<'a, 'b>,
+	E2: Error<'a, 'b>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
