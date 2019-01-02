@@ -1,31 +1,40 @@
-use crate::Parser;
-use std::fmt::{
-	Display,
-	Formatter,
-	Result as FmtResult,
+use std::{
+	fmt::{
+		Debug,
+		Display,
+		Formatter,
+		Result as FmtResult,
+	},
+	marker::PhantomData,
 };
 
 #[derive(Debug)]
-pub struct StringifyParserRequirement<'a, 'b, P>
+pub struct StringifyParserRequirement<'a, 'b, R>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 {
-	requirement: P::Requirement,
+	requirement: R,
+	_a: PhantomData<&'a ()>,
+	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, P> StringifyParserRequirement<'a, 'b, P>
+impl<'a, 'b, R> StringifyParserRequirement<'a, 'b, R>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 {
-	pub fn new(requirement: P::Requirement) -> Self
+	pub fn new(requirement: R) -> Self
 	{
-		Self { requirement }
+		Self {
+			requirement,
+			_a: PhantomData,
+			_b: PhantomData,
+		}
 	}
 }
 
-impl<'a, 'b, P> Display for StringifyParserRequirement<'a, 'b, P>
+impl<'a, 'b, R> Display for StringifyParserRequirement<'a, 'b, R>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
