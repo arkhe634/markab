@@ -1,34 +1,38 @@
 use crate::{
 	order_parser::OrderParserRequirement,
 	Error,
-	Parser,
 };
 use std::fmt::{
+	Debug,
 	Display,
 	Formatter,
 	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct OrderParserError<'a, 'b, P, Q>
+pub struct OrderParserError<'a, 'b, R1, R2, E1, E2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
+	E1: Error<'a, 'b>,
+	E2: Error<'a, 'b>,
 {
 	from: usize,
-	requirement: OrderParserRequirement<'a, 'b, P, Q>,
-	cause: (P::Error, Q::Error),
+	requirement: OrderParserRequirement<'a, 'b, R1, R2>,
+	cause: (E1, E2),
 }
 
-impl<'a, 'b, P, Q> OrderParserError<'a, 'b, P, Q>
+impl<'a, 'b, R1, R2, E1, E2> OrderParserError<'a, 'b, R1, R2, E1, E2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
+	E1: Error<'a, 'b>,
+	E2: Error<'a, 'b>,
 {
 	pub fn new(
 		from: usize,
-		requirement: OrderParserRequirement<'a, 'b, P, Q>,
-		cause: (P::Error, Q::Error),
+		requirement: OrderParserRequirement<'a, 'b, R1, R2>,
+		cause: (E1, E2),
 	) -> Self
 	{
 		Self {
@@ -39,10 +43,12 @@ where
 	}
 }
 
-impl<'a, 'b, P, Q> Error<'a, 'b> for OrderParserError<'a, 'b, P, Q>
+impl<'a, 'b, R1, R2, E1, E2> Error<'a, 'b> for OrderParserError<'a, 'b, R1, R2, E1, E2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
+	E1: Error<'a, 'b>,
+	E2: Error<'a, 'b>,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -87,10 +93,12 @@ where
 	}
 }
 
-impl<'a, 'b, P, Q> Display for OrderParserError<'a, 'b, P, Q>
+impl<'a, 'b, R1, R2, E1, E2> Display for OrderParserError<'a, 'b, R1, R2, E1, E2>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	R1: Debug + Display,
+	R2: Debug + Display,
+	E1: Error<'a, 'b>,
+	E2: Error<'a, 'b>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
