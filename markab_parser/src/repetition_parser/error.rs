@@ -1,34 +1,36 @@
 use crate::{
 	repetition_parser::RepetitionParserRequirement,
 	Error,
-	Parser,
 };
 use std::fmt::{
+	Debug,
 	Display,
 	Formatter,
 	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct RepetitionParserError<'a, 'b, P>
+pub struct RepetitionParserError<'a, 'b, R, E>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
+	E: Error<'a, 'b>,
 {
 	from: usize,
-	requirement: RepetitionParserRequirement<'a, 'b, P>,
+	requirement: RepetitionParserRequirement<'a, 'b, R>,
 	found: usize,
-	cause: P::Error,
+	cause: E,
 }
 
-impl<'a, 'b, P> RepetitionParserError<'a, 'b, P>
+impl<'a, 'b, R, E> RepetitionParserError<'a, 'b, R, E>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
+	E: Error<'a, 'b>,
 {
 	pub fn new(
 		from: usize,
-		requirement: RepetitionParserRequirement<'a, 'b, P>,
+		requirement: RepetitionParserRequirement<'a, 'b, R>,
 		found: usize,
-		cause: P::Error,
+		cause: E,
 	) -> Self
 	{
 		Self {
@@ -40,9 +42,10 @@ where
 	}
 }
 
-impl<'a, 'b, P> Error<'a, 'b> for RepetitionParserError<'a, 'b, P>
+impl<'a, 'b, R, E> Error<'a, 'b> for RepetitionParserError<'a, 'b, R, E>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
+	E: Error<'a, 'b>,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -86,9 +89,10 @@ where
 	}
 }
 
-impl<'a, 'b, P> Display for RepetitionParserError<'a, 'b, P>
+impl<'a, 'b, R, E> Display for RepetitionParserError<'a, 'b, R, E>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
+	E: Error<'a, 'b>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

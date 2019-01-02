@@ -1,40 +1,45 @@
-use crate::Parser;
 use std::{
 	fmt::{
+		Debug,
 		Display,
 		Formatter,
 		Result as FmtResult,
 	},
+	marker::PhantomData,
 	usize::MAX,
 };
 
 #[derive(Debug)]
-pub struct RepetitionParserRequirement<'a, 'b, P>
+pub struct RepetitionParserRequirement<'a, 'b, R>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 {
-	requirement: P::Requirement,
+	requirement: R,
 	min: usize,
 	max: usize,
+	_a: PhantomData<&'a ()>,
+	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, P> RepetitionParserRequirement<'a, 'b, P>
+impl<'a, 'b, R> RepetitionParserRequirement<'a, 'b, R>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 {
-	pub fn new(requirement: P::Requirement, min: usize, max: usize) -> Self
+	pub fn new(requirement: R, min: usize, max: usize) -> Self
 	{
 		Self {
 			requirement,
 			min,
 			max,
+			_a: PhantomData,
+			_b: PhantomData,
 		}
 	}
 }
 
-impl<'a, 'b, P> Display for RepetitionParserRequirement<'a, 'b, P>
+impl<'a, 'b, R> Display for RepetitionParserRequirement<'a, 'b, R>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
