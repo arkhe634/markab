@@ -1,33 +1,42 @@
-use crate::Parser;
-use std::fmt::{
-	Display,
-	Formatter,
-	Result as FmtResult,
+use std::{
+	fmt::{
+		Debug,
+		Display,
+		Formatter,
+		Result as FmtResult,
+	},
+	marker::PhantomData,
 };
 
 #[derive(Debug)]
-pub struct NotParserRequirement<'a, 'b, P>
+pub struct NotParserRequirement<'a, 'b, R>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 	'a: 'b,
 {
-	requirement: P::Requirement,
+	requirement: R,
+	_a: PhantomData<&'a ()>,
+	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, P> NotParserRequirement<'a, 'b, P>
+impl<'a, 'b, R> NotParserRequirement<'a, 'b, R>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 	'a: 'b,
 {
-	pub fn new(requirement: P::Requirement) -> Self
+	pub fn new(requirement: R) -> Self
 	{
-		Self { requirement }
+		Self {
+			requirement,
+			_a: PhantomData,
+			_b: PhantomData,
+		}
 	}
 }
 
-impl<'a, 'b, P> Display for NotParserRequirement<'a, 'b, P>
+impl<'a, 'b, R> Display for NotParserRequirement<'a, 'b, R>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 	'a: 'b,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult

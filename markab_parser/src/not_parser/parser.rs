@@ -38,9 +38,9 @@ where
 	P: Parser<'a, 'b>,
 	'a: 'b,
 {
-	type Error = NotParserError<'a, 'b, P>;
+	type Error = NotParserError<'a, 'b, P::Requirement, P::Output>;
 	type Output = P::Error;
-	type Requirement = NotParserRequirement<'a, 'b, P>;
+	type Requirement = NotParserRequirement<'a, 'b, P::Requirement>;
 	type RequirementContext = ();
 
 	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>

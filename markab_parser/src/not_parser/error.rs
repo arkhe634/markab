@@ -1,49 +1,55 @@
 use crate::{
 	not_parser::NotParserRequirement,
 	Error,
-	Parser,
 };
-use std::fmt::{
-	Display,
-	Formatter,
-	Result as FmtResult,
+use std::{
+	fmt::{
+		Debug,
+		Display,
+		Formatter,
+		Result as FmtResult,
+	},
+	marker::PhantomData,
 };
 
 #[derive(Debug)]
-pub struct NotParserError<'a, 'b, P>
+pub struct NotParserError<'a, 'b, R, E>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 	'a: 'b,
 {
 	from: usize,
-	requirement: NotParserRequirement<'a, 'b, P>,
-	cause: P::Output,
+	requirement: NotParserRequirement<'a, 'b, R>,
+	cause: E,
+	_a: PhantomData<&'a ()>,
+	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, P> NotParserError<'a, 'b, P>
+impl<'a, 'b, R, E> NotParserError<'a, 'b, R, E>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 	'a: 'b,
 {
-	pub fn new(from: usize, requirement: NotParserRequirement<'a, 'b, P>, cause: P::Output)
-		-> Self
+	pub fn new(from: usize, requirement: NotParserRequirement<'a, 'b, R>, cause: E) -> Self
 	{
 		Self {
 			from,
 			requirement,
 			cause,
+			_a: PhantomData,
+			_b: PhantomData,
 		}
 	}
 
-	pub fn cause(&self) -> &P::Output
+	pub fn cause(&self) -> &E
 	{
 		&self.cause
 	}
 }
 
-impl<'a, 'b, P> Error<'a, 'b> for NotParserError<'a, 'b, P>
+impl<'a, 'b, R, E> Error<'a, 'b> for NotParserError<'a, 'b, R, E>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 	'a: 'b,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
@@ -88,9 +94,9 @@ where
 	}
 }
 
-impl<'a, 'b, P> Display for NotParserError<'a, 'b, P>
+impl<'a, 'b, R, E> Display for NotParserError<'a, 'b, R, E>
 where
-	P: Parser<'a, 'b>,
+	R: Debug + Display,
 	'a: 'b,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
