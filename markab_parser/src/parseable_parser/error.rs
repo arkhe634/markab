@@ -1,40 +1,42 @@
-use crate::{
-	Error,
-	Parseable,
-};
-use std::fmt::{
-	Display,
-	Formatter,
-	Result as FmtResult,
+use crate::Error;
+use std::{
+	fmt::{
+		Display,
+		Formatter,
+		Result as FmtResult,
+	},
+	marker::PhantomData,
 };
 
 #[derive(Debug)]
-pub struct ParseableParserError<'a, 'b, P>
+pub struct ParseableParserError<'a, 'b, E>
 where
-	P: Parseable<'a, 'b>,
+	E: Error<'a, 'b>,
 {
 	from: usize,
 	requirement: &'a str,
-	cause: P::Error,
+	cause: E,
+	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, P> ParseableParserError<'a, 'b, P>
+impl<'a, 'b, E> ParseableParserError<'a, 'b, E>
 where
-	P: Parseable<'a, 'b>,
+	E: Error<'a, 'b>,
 {
-	pub fn new(from: usize, requirement: &'a str, cause: P::Error) -> Self
+	pub fn new(from: usize, requirement: &'a str, cause: E) -> Self
 	{
 		Self {
 			from,
 			requirement,
 			cause,
+			_b: PhantomData,
 		}
 	}
 }
 
-impl<'a, 'b, P> Error<'a, 'b> for ParseableParserError<'a, 'b, P>
+impl<'a, 'b, E> Error<'a, 'b> for ParseableParserError<'a, 'b, E>
 where
-	P: Parseable<'a, 'b>,
+	E: Error<'a, 'b>,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -78,9 +80,9 @@ where
 	}
 }
 
-impl<'a, 'b, P> Display for ParseableParserError<'a, 'b, P>
+impl<'a, 'b, E> Display for ParseableParserError<'a, 'b, E>
 where
-	P: Parseable<'a, 'b>,
+	E: Error<'a, 'b>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
