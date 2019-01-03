@@ -71,3 +71,7 @@ Parseable trait provides static method `Parseable::parse` and
 
 + remove Parser types from parameter types of Error types.  
 + map_parser module become public.  
+
+## Version 0.5.0
+
++ remove Parser type from parameter type of MapParserError.
