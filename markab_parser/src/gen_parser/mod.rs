@@ -1,7 +1,9 @@
-mod gen_parser;
+mod error;
+mod parser;
+mod requirement;
 
-pub use self::gen_parser::{
-	GenParser,
-	GenParserError,
-	GenParserRequirement,
+pub use self::{
+	error::GenParserError,
+	parser::GenParser,
+	requirement::GenParserRequirement,
 };

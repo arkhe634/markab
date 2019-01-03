@@ -1,7 +1,9 @@
-mod map_parser;
+mod error;
+mod parser;
+mod requirement;
 
-pub use self::map_parser::{
-	MapParser,
-	MapParserError,
-	MapParserRequirement,
+pub use self::{
+	error::MapParserError,
+	parser::MapParser,
+	requirement::MapParserRequirement,
 };

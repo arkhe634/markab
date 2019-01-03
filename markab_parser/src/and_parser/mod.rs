@@ -1,8 +1,11 @@
-mod and_parser;
+mod error;
+mod parser;
+mod requirement;
+mod utility;
 
-pub use self::and_parser::{
-	and,
-	AndParser,
-	AndParserError,
-	AndParserRequirement,
+pub use self::{
+	error::AndParserError,
+	parser::AndParser,
+	requirement::AndParserRequirement,
+	utility::and,
 };

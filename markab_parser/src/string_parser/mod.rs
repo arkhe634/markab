@@ -1,7 +1,9 @@
-mod string_parser;
+mod error;
+mod parser;
+mod utility;
 
-pub use self::string_parser::{
-	string,
-	StringParser,
-	StringParserError,
+pub use self::{
+	error::StringParserError,
+	parser::StringParser,
+	utility::string,
 };

@@ -1,7 +1,9 @@
-mod repetition_parser;
+mod error;
+mod parser;
+mod requirement;
 
-pub use self::repetition_parser::{
-	RepetitionParser,
-	RepetitionParserError,
-	RepetitionParserRequirement,
+pub use self::{
+	error::RepetitionParserError,
+	parser::RepetitionParser,
+	requirement::RepetitionParserRequirement,
 };
