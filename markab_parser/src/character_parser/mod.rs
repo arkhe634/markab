@@ -1,7 +1,9 @@
-mod character_parser;
+mod error;
+mod parser;
+mod utility;
 
-pub use self::character_parser::{
-	character,
-	CharacterParser,
-	CharacterParserError,
+pub use self::{
+	error::CharacterParserError,
+	parser::CharacterParser,
+	utility::character,
 };

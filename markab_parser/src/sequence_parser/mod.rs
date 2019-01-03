@@ -1,7 +1,9 @@
-mod sequence_parser;
+mod error;
+mod parser;
+mod requirement;
 
-pub use self::sequence_parser::{
-	SequenceParser,
-	SequenceParserError,
-	SequenceParserRequirement,
+pub use self::{
+	error::SequenceParserError,
+	parser::SequenceParser,
+	requirement::SequenceParserRequirement,
 };

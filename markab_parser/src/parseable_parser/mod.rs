@@ -1,6 +1,7 @@
-mod parseable_parser;
+mod error;
+mod parser;
 
-pub use self::parseable_parser::{
-	ParseableParser,
-	ParseableParserError,
+pub use self::{
+	error::ParseableParserError,
+	parser::ParseableParser,
 };

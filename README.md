@@ -57,12 +57,17 @@ Parseable trait provides static method `Parseable::parse` and
 
 ## Version 0.1.0
 
-add primitive parsers.
++ add primitive parsers.  
 
 ## Version 0.2.0
 
-add `AndParser` and `NotParser`.
++ add `AndParser` and `NotParser`.  
 
 ## Version 0.3.0
 
-add `Debug` and `Display` implementations for types.
++ add `Debug` and `Display` implementations for types.  
+
+## Version 0.4.0
+
++ remove Parser types from parameter types of Error types.  
++ map_parser module become public.  

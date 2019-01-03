@@ -1,7 +1,9 @@
-mod stringify_parser;
+mod error;
+mod parser;
+mod requirement;
 
-pub use self::stringify_parser::{
-	StringifyParser,
-	StringifyParserError,
-	StringifyParserRequirement,
+pub use self::{
+	error::StringifyParserError,
+	parser::StringifyParser,
+	requirement::StringifyParserRequirement,
 };

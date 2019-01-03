@@ -1,7 +1,9 @@
-mod order_parser;
+mod error;
+mod parser;
+mod requirement;
 
-pub use self::order_parser::{
-	OrderParser,
-	OrderParserError,
-	OrderParserRequirement,
+pub use self::{
+	error::OrderParserError,
+	parser::OrderParser,
+	requirement::OrderParserRequirement,
 };
