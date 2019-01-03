@@ -60,7 +60,7 @@ where
 	P: Parser<'a, 'b>,
 	F: 'static + Fn(P::Output) -> Q,
 {
-	type Error = MapParserError<'a, 'b, P>;
+	type Error = MapParserError<'a, 'b, P::Requirement, P::Error>;
 	type Output = Q;
 	type Requirement = MapParserRequirement<'a, 'b, P::Requirement>;
 	type RequirementContext = ();
