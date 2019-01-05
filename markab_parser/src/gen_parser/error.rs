@@ -82,27 +82,6 @@ where
 			Right(err) => err.print(f, depth),
 		}
 	}
-
-	fn print(&self, f: &mut Formatter, depth: usize) -> FmtResult
-	{
-		for _ in 0..depth
-		{
-			write!(f, "\t")?;
-		}
-		write!(f, "at position ")?;
-		self.from(f)?;
-		write!(f, " required ")?;
-		self.requirement(f)?;
-		write!(f, " but ")?;
-		self.result(f)?;
-		write!(f, ".\n")?;
-		self.causes(f, depth + 1)
-	}
-
-	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
-	{
-		self.print(f, depth)
-	}
 }
 
 impl<'a, 'b, R1, R2, E1, E2> Display for GenParserError<'a, 'b, R1, R2, E1, E2>
