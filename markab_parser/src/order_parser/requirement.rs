@@ -53,6 +53,6 @@ where
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
-		write!(f, "{} {}", self.first, self.second)
+		write!(f, "{} / {}", self.first, self.second)
 	}
 }
