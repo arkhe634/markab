@@ -25,7 +25,7 @@ impl<'a, 'b> StringParserError<'a, 'b>
 	}
 }
 
-impl<'a, 'b> Error<'a, 'b> for StringParserError<'a, 'b>
+impl<'a, 'b> Error for StringParserError<'a, 'b>
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{

@@ -17,7 +17,7 @@ use std::{
 
 pub trait Parser<'a, 'b>: Debug
 {
-	type Error: Error<'a, 'b>;
+	type Error: Error;
 	type Output;
 	type Requirement: Debug + Display;
 	type RequirementContext;

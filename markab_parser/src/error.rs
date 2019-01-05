@@ -3,7 +3,7 @@ use std::fmt::{
 	Result as FmtResult,
 };
 
-pub trait Error<'a, 'b>
+pub trait Error
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult;
 	fn requirement(&self, f: &mut Formatter) -> FmtResult;

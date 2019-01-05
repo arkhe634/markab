@@ -13,7 +13,7 @@ use std::fmt::{
 pub struct MapParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	from: usize,
 	requirement: MapParserRequirement<'a, 'b, R>,
@@ -23,7 +23,7 @@ where
 impl<'a, 'b, R, E> MapParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	pub fn new(from: usize, requirement: MapParserRequirement<'a, 'b, R>, cause: E) -> Self
 	{
@@ -35,10 +35,10 @@ where
 	}
 }
 
-impl<'a, 'b, R, E> Error<'a, 'b> for MapParserError<'a, 'b, R, E>
+impl<'a, 'b, R, E> Error for MapParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -85,7 +85,7 @@ where
 impl<'a, 'b, R, E> Display for MapParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

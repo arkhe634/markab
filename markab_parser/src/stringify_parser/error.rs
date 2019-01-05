@@ -16,7 +16,7 @@ use std::{
 pub struct StringifyParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	from: usize,
 	requirement: StringifyParserRequirement<'a, 'b, R>,
@@ -28,7 +28,7 @@ where
 impl<'a, 'b, R, E> StringifyParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	pub fn new(from: usize, requirement: StringifyParserRequirement<'a, 'b, R>, err: E) -> Self
 	{
@@ -42,10 +42,10 @@ where
 	}
 }
 
-impl<'a, 'b, R, E> Error<'a, 'b> for StringifyParserError<'a, 'b, R, E>
+impl<'a, 'b, R, E> Error for StringifyParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -92,7 +92,7 @@ where
 impl<'a, 'b, R, E> Display for StringifyParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

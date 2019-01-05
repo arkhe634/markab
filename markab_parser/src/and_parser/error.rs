@@ -13,7 +13,7 @@ use std::fmt::{
 pub struct AndParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	from: usize,
 	requirement: AndParserRequirement<'a, 'b, R>,
@@ -23,7 +23,7 @@ where
 impl<'a, 'b, R, E> AndParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	pub fn new(from: usize, requirement: AndParserRequirement<'a, 'b, R>, cause: E) -> Self
 	{
@@ -35,10 +35,10 @@ where
 	}
 }
 
-impl<'a, 'b, R, E> Error<'a, 'b> for AndParserError<'a, 'b, R, E>
+impl<'a, 'b, R, E> Error for AndParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{

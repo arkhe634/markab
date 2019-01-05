@@ -47,7 +47,7 @@ where
 	}
 }
 
-impl<'a, 'b, R, E> Error<'a, 'b> for NotParserError<'a, 'b, R, E>
+impl<'a, 'b, R, E> Error for NotParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
 	'a: 'b,

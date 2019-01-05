@@ -11,7 +11,7 @@ use std::{
 #[derive(Debug)]
 pub struct ParseableParserError<'a, 'b, E>
 where
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	from: usize,
 	requirement: &'a str,
@@ -21,7 +21,7 @@ where
 
 impl<'a, 'b, E> ParseableParserError<'a, 'b, E>
 where
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	pub fn new(from: usize, requirement: &'a str, cause: E) -> Self
 	{
@@ -34,9 +34,9 @@ where
 	}
 }
 
-impl<'a, 'b, E> Error<'a, 'b> for ParseableParserError<'a, 'b, E>
+impl<'a, 'b, E> Error for ParseableParserError<'a, 'b, E>
 where
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -82,7 +82,7 @@ where
 
 impl<'a, 'b, E> Display for ParseableParserError<'a, 'b, E>
 where
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

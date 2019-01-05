@@ -13,7 +13,7 @@ use std::fmt::{
 pub struct RepetitionParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	from: usize,
 	requirement: RepetitionParserRequirement<'a, 'b, R>,
@@ -24,7 +24,7 @@ where
 impl<'a, 'b, R, E> RepetitionParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	pub fn new(
 		from: usize,
@@ -42,10 +42,10 @@ where
 	}
 }
 
-impl<'a, 'b, R, E> Error<'a, 'b> for RepetitionParserError<'a, 'b, R, E>
+impl<'a, 'b, R, E> Error for RepetitionParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -92,7 +92,7 @@ where
 impl<'a, 'b, R, E> Display for RepetitionParserError<'a, 'b, R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

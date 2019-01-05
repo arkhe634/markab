@@ -19,8 +19,8 @@ pub struct GenParserError<'a, 'b, R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
-	E1: Error<'a, 'b>,
-	E2: Error<'a, 'b>,
+	E1: Error,
+	E2: Error,
 {
 	from: usize,
 	requirement: GenParserRequirement<'a, 'b, R1, R2>,
@@ -31,8 +31,8 @@ impl<'a, 'b, R1, R2, E1, E2> GenParserError<'a, 'b, R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
-	E1: Error<'a, 'b>,
-	E2: Error<'a, 'b>,
+	E1: Error,
+	E2: Error,
 {
 	pub fn new(
 		from: usize,
@@ -48,12 +48,12 @@ where
 	}
 }
 
-impl<'a, 'b, R1, R2, E1, E2> Error<'a, 'b> for GenParserError<'a, 'b, R1, R2, E1, E2>
+impl<'a, 'b, R1, R2, E1, E2> Error for GenParserError<'a, 'b, R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
-	E1: Error<'a, 'b>,
-	E2: Error<'a, 'b>,
+	E1: Error,
+	E2: Error,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -109,8 +109,8 @@ impl<'a, 'b, R1, R2, E1, E2> Display for GenParserError<'a, 'b, R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
-	E1: Error<'a, 'b>,
-	E2: Error<'a, 'b>,
+	E1: Error,
+	E2: Error,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
