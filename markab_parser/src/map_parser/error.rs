@@ -10,22 +10,22 @@ use std::fmt::{
 };
 
 #[derive(Debug)]
-pub struct MapParserError<'a, 'b, R, E>
+pub struct MapParserError<R, E>
 where
 	R: Debug + Display,
 	E: Error,
 {
 	from: usize,
-	requirement: MapParserRequirement<'a, 'b, R>,
+	requirement: MapParserRequirement<R>,
 	cause: E,
 }
 
-impl<'a, 'b, R, E> MapParserError<'a, 'b, R, E>
+impl<R, E> MapParserError<R, E>
 where
 	R: Debug + Display,
 	E: Error,
 {
-	pub fn new(from: usize, requirement: MapParserRequirement<'a, 'b, R>, cause: E) -> Self
+	pub fn new(from: usize, requirement: MapParserRequirement<R>, cause: E) -> Self
 	{
 		Self {
 			from,
@@ -35,7 +35,7 @@ where
 	}
 }
 
-impl<'a, 'b, R, E> Error for MapParserError<'a, 'b, R, E>
+impl<R, E> Error for MapParserError<R, E>
 where
 	R: Debug + Display,
 	E: Error,
@@ -66,7 +66,7 @@ where
 	}
 }
 
-impl<'a, 'b, R, E> Display for MapParserError<'a, 'b, R, E>
+impl<R, E> Display for MapParserError<R, E>
 where
 	R: Debug + Display,
 	E: Error,

@@ -60,9 +60,9 @@ where
 	P: Parser<'a, 'b>,
 	F: 'static + Fn(P::Output) -> Q,
 {
-	type Error = MapParserError<'a, 'b, P::Requirement, P::Error>;
+	type Error = MapParserError<P::Requirement, P::Error>;
 	type Output = Q;
-	type Requirement = MapParserRequirement<'a, 'b, P::Requirement>;
+	type Requirement = MapParserRequirement<P::Requirement>;
 	type RequirementContext = ();
 
 	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>

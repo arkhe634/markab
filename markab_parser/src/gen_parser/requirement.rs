@@ -1,26 +1,21 @@
-use std::{
-	fmt::{
-		Debug,
-		Display,
-		Formatter,
-		Result as FmtResult,
-	},
-	marker::PhantomData,
+use std::fmt::{
+	Debug,
+	Display,
+	Formatter,
+	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct GenParserRequirement<'a, 'b, R1, R2>
+pub struct GenParserRequirement<R1, R2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
 {
 	requirement: R1,
 	generated: Option<R2>,
-	_a: PhantomData<&'a ()>,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, R1, R2> GenParserRequirement<'a, 'b, R1, R2>
+impl<R1, R2> GenParserRequirement<R1, R2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
@@ -30,8 +25,6 @@ where
 		Self {
 			requirement,
 			generated,
-			_a: PhantomData,
-			_b: PhantomData,
 		}
 	}
 
@@ -46,7 +39,7 @@ where
 	}
 }
 
-impl<'a, 'b, R1, R2> Display for GenParserRequirement<'a, 'b, R1, R2>
+impl<R1, R2> Display for GenParserRequirement<R1, R2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,

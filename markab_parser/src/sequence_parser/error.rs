@@ -7,18 +7,15 @@ use either::{
 	Left,
 	Right,
 };
-use std::{
-	fmt::{
-		Debug,
-		Display,
-		Formatter,
-		Result as FmtResult,
-	},
-	marker::PhantomData,
+use std::fmt::{
+	Debug,
+	Display,
+	Formatter,
+	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct SequenceParserError<'a, 'b, R1, R2, E1, E2>
+pub struct SequenceParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
@@ -26,13 +23,11 @@ where
 	E2: Error,
 {
 	from: usize,
-	requirement: SequenceParserRequirement<'a, 'b, R1, R2>,
+	requirement: SequenceParserRequirement<R1, R2>,
 	cause: Either<E1, E2>,
-	_a: PhantomData<&'a ()>,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, R1, R2, E1, E2> SequenceParserError<'a, 'b, R1, R2, E1, E2>
+impl<R1, R2, E1, E2> SequenceParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
@@ -41,7 +36,7 @@ where
 {
 	pub fn new(
 		from: usize,
-		requirement: SequenceParserRequirement<'a, 'b, R1, R2>,
+		requirement: SequenceParserRequirement<R1, R2>,
 		cause: Either<E1, E2>,
 	) -> Self
 	{
@@ -49,13 +44,11 @@ where
 			from,
 			requirement,
 			cause,
-			_a: PhantomData,
-			_b: PhantomData,
 		}
 	}
 }
 
-impl<'a, 'b, R1, R2, E1, E2> Error for SequenceParserError<'a, 'b, R1, R2, E1, E2>
+impl<R1, R2, E1, E2> Error for SequenceParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
@@ -91,7 +84,7 @@ where
 	}
 }
 
-impl<'a, 'b, R1, R2, E1, E2> Display for SequenceParserError<'a, 'b, R1, R2, E1, E2>
+impl<R1, R2, E1, E2> Display for SequenceParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,

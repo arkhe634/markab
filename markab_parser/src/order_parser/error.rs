@@ -10,7 +10,7 @@ use std::fmt::{
 };
 
 #[derive(Debug)]
-pub struct OrderParserError<'a, 'b, R1, R2, E1, E2>
+pub struct OrderParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
@@ -18,22 +18,18 @@ where
 	E2: Error,
 {
 	from: usize,
-	requirement: OrderParserRequirement<'a, 'b, R1, R2>,
+	requirement: OrderParserRequirement<R1, R2>,
 	cause: (E1, E2),
 }
 
-impl<'a, 'b, R1, R2, E1, E2> OrderParserError<'a, 'b, R1, R2, E1, E2>
+impl<R1, R2, E1, E2> OrderParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
 	E1: Error,
 	E2: Error,
 {
-	pub fn new(
-		from: usize,
-		requirement: OrderParserRequirement<'a, 'b, R1, R2>,
-		cause: (E1, E2),
-	) -> Self
+	pub fn new(from: usize, requirement: OrderParserRequirement<R1, R2>, cause: (E1, E2)) -> Self
 	{
 		Self {
 			from,
@@ -43,7 +39,7 @@ where
 	}
 }
 
-impl<'a, 'b, R1, R2, E1, E2> Error for OrderParserError<'a, 'b, R1, R2, E1, E2>
+impl<R1, R2, E1, E2> Error for OrderParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
@@ -72,7 +68,7 @@ where
 	}
 }
 
-impl<'a, 'b, R1, R2, E1, E2> Display for OrderParserError<'a, 'b, R1, R2, E1, E2>
+impl<R1, R2, E1, E2> Display for OrderParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,

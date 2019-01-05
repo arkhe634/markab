@@ -32,7 +32,7 @@ impl<'a> CharacterClassParserError<'a>
 	}
 }
 
-impl<'a, 'b> Error for CharacterClassParserError<'a>
+impl<'a> Error for CharacterClassParserError<'a>
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{

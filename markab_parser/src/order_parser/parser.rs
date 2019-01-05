@@ -45,9 +45,9 @@ where
 	P: Parser<'a, 'b>,
 	Q: Parser<'a, 'b>,
 {
-	type Error = OrderParserError<'a, 'b, P::Requirement, Q::Requirement, P::Error, Q::Error>;
+	type Error = OrderParserError<P::Requirement, Q::Requirement, P::Error, Q::Error>;
 	type Output = Either<P::Output, Q::Output>;
-	type Requirement = OrderParserRequirement<'a, 'b, P::Requirement, Q::Requirement>;
+	type Requirement = OrderParserRequirement<P::Requirement, Q::Requirement>;
 	type RequirementContext = ();
 
 	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>

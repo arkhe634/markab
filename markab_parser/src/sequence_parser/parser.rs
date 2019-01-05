@@ -44,9 +44,9 @@ where
 	P: Parser<'a, 'b>,
 	Q: Parser<'a, 'b>,
 {
-	type Error = SequenceParserError<'a, 'b, P::Requirement, Q::Requirement, P::Error, Q::Error>;
+	type Error = SequenceParserError<P::Requirement, Q::Requirement, P::Error, Q::Error>;
 	type Output = (P::Output, Q::Output);
-	type Requirement = SequenceParserRequirement<'a, 'b, P::Requirement, Q::Requirement>;
+	type Requirement = SequenceParserRequirement<P::Requirement, Q::Requirement>;
 	type RequirementContext = ();
 
 	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>

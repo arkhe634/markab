@@ -6,7 +6,7 @@ use crate::{
 pub trait Parseable<'a, 'b>
 {
 	type Error: Error;
-	type Output: 'b;
+	type Output;
 
 	fn parse(src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>;
 

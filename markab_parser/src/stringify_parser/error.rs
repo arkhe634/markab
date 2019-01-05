@@ -2,47 +2,40 @@ use crate::{
 	stringify_parser::StringifyParserRequirement,
 	Error,
 };
-use std::{
-	fmt::{
-		Debug,
-		Display,
-		Formatter,
-		Result as FmtResult,
-	},
-	marker::PhantomData,
+use std::fmt::{
+	Debug,
+	Display,
+	Formatter,
+	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct StringifyParserError<'a, 'b, R, E>
+pub struct StringifyParserError<R, E>
 where
 	R: Debug + Display,
 	E: Error,
 {
 	from: usize,
-	requirement: StringifyParserRequirement<'a, 'b, R>,
+	requirement: StringifyParserRequirement<R>,
 	err: E,
-	_a: PhantomData<&'a ()>,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, R, E> StringifyParserError<'a, 'b, R, E>
+impl<R, E> StringifyParserError<R, E>
 where
 	R: Debug + Display,
 	E: Error,
 {
-	pub fn new(from: usize, requirement: StringifyParserRequirement<'a, 'b, R>, err: E) -> Self
+	pub fn new(from: usize, requirement: StringifyParserRequirement<R>, err: E) -> Self
 	{
 		Self {
 			from,
 			requirement,
 			err,
-			_a: PhantomData,
-			_b: PhantomData,
 		}
 	}
 }
 
-impl<'a, 'b, R, E> Error for StringifyParserError<'a, 'b, R, E>
+impl<R, E> Error for StringifyParserError<R, E>
 where
 	R: Debug + Display,
 	E: Error,
@@ -73,7 +66,7 @@ where
 	}
 }
 
-impl<'a, 'b, R, E> Display for StringifyParserError<'a, 'b, R, E>
+impl<R, E> Display for StringifyParserError<R, E>
 where
 	R: Debug + Display,
 	E: Error,

@@ -1,38 +1,29 @@
-use std::{
-	fmt::{
-		Debug,
-		Display,
-		Formatter,
-		Result as FmtResult,
-	},
-	marker::PhantomData,
+use std::fmt::{
+	Debug,
+	Display,
+	Formatter,
+	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct AndParserRequirement<'a, 'b, R>
+pub struct AndParserRequirement<R>
 where
 	R: Debug + Display,
 {
 	requirement: R,
-	_a: PhantomData<&'a ()>,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, R> AndParserRequirement<'a, 'b, R>
+impl<R> AndParserRequirement<R>
 where
 	R: Debug + Display,
 {
 	pub fn new(requirement: R) -> Self
 	{
-		Self {
-			requirement,
-			_a: PhantomData,
-			_b: PhantomData,
-		}
+		Self { requirement }
 	}
 }
 
-impl<'a, 'b, R> Display for AndParserRequirement<'a, 'b, R>
+impl<R> Display for AndParserRequirement<R>
 where
 	R: Debug + Display,
 {

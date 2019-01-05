@@ -10,22 +10,22 @@ use std::fmt::{
 };
 
 #[derive(Debug)]
-pub struct AndParserError<'a, 'b, R, E>
+pub struct AndParserError<R, E>
 where
 	R: Debug + Display,
 	E: Error,
 {
 	from: usize,
-	requirement: AndParserRequirement<'a, 'b, R>,
+	requirement: AndParserRequirement<R>,
 	cause: E,
 }
 
-impl<'a, 'b, R, E> AndParserError<'a, 'b, R, E>
+impl<R, E> AndParserError<R, E>
 where
 	R: Debug + Display,
 	E: Error,
 {
-	pub fn new(from: usize, requirement: AndParserRequirement<'a, 'b, R>, cause: E) -> Self
+	pub fn new(from: usize, requirement: AndParserRequirement<R>, cause: E) -> Self
 	{
 		Self {
 			from,
@@ -35,7 +35,7 @@ where
 	}
 }
 
-impl<'a, 'b, R, E> Error for AndParserError<'a, 'b, R, E>
+impl<R, E> Error for AndParserError<R, E>
 where
 	R: Debug + Display,
 	E: Error,

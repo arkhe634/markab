@@ -39,9 +39,9 @@ impl<'a, 'b, P> Parser<'a, 'b> for RepetitionParser<'a, 'b, P>
 where
 	P: Parser<'a, 'b>,
 {
-	type Error = RepetitionParserError<'a, 'b, P::Requirement, P::Error>;
+	type Error = RepetitionParserError<P::Requirement, P::Error>;
 	type Output = Vec<P::Output>;
-	type Requirement = RepetitionParserRequirement<'a, 'b, P::Requirement>;
+	type Requirement = RepetitionParserRequirement<P::Requirement>;
 	type RequirementContext = ();
 
 	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>

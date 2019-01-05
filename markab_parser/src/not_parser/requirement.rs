@@ -1,43 +1,31 @@
-use std::{
-	fmt::{
-		Debug,
-		Display,
-		Formatter,
-		Result as FmtResult,
-	},
-	marker::PhantomData,
+use std::fmt::{
+	Debug,
+	Display,
+	Formatter,
+	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct NotParserRequirement<'a, 'b, R>
+pub struct NotParserRequirement<R>
 where
 	R: Debug + Display,
-	'a: 'b,
 {
 	requirement: R,
-	_a: PhantomData<&'a ()>,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, R> NotParserRequirement<'a, 'b, R>
+impl<R> NotParserRequirement<R>
 where
 	R: Debug + Display,
-	'a: 'b,
 {
 	pub fn new(requirement: R) -> Self
 	{
-		Self {
-			requirement,
-			_a: PhantomData,
-			_b: PhantomData,
-		}
+		Self { requirement }
 	}
 }
 
-impl<'a, 'b, R> Display for NotParserRequirement<'a, 'b, R>
+impl<R> Display for NotParserRequirement<R>
 where
 	R: Debug + Display,
-	'a: 'b,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

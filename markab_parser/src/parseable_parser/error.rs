@@ -1,25 +1,21 @@
 use crate::Error;
-use std::{
-	fmt::{
-		Display,
-		Formatter,
-		Result as FmtResult,
-	},
-	marker::PhantomData,
+use std::fmt::{
+	Display,
+	Formatter,
+	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct ParseableParserError<'a, 'b, E>
+pub struct ParseableParserError<'a, E>
 where
 	E: Error,
 {
 	from: usize,
 	requirement: &'a str,
 	cause: E,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, E> ParseableParserError<'a, 'b, E>
+impl<'a, E> ParseableParserError<'a, E>
 where
 	E: Error,
 {
@@ -29,12 +25,11 @@ where
 			from,
 			requirement,
 			cause,
-			_b: PhantomData,
 		}
 	}
 }
 
-impl<'a, 'b, E> Error for ParseableParserError<'a, 'b, E>
+impl<'a, E> Error for ParseableParserError<'a, E>
 where
 	E: Error,
 {
@@ -59,7 +54,7 @@ where
 	}
 }
 
-impl<'a, 'b, E> Display for ParseableParserError<'a, 'b, E>
+impl<'a, E> Display for ParseableParserError<'a, E>
 where
 	E: Error,
 {

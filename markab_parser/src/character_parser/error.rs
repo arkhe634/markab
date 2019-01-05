@@ -25,7 +25,7 @@ impl CharacterParserError
 	}
 }
 
-impl<'a, 'b> Error for CharacterParserError
+impl Error for CharacterParserError
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{

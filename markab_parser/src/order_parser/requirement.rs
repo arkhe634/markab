@@ -1,38 +1,28 @@
-use std::{
-	fmt::{
-		Debug,
-		Display,
-		Formatter,
-		Result as FmtResult,
-	},
-	marker::PhantomData,
+use std::fmt::{
+	Debug,
+	Display,
+	Formatter,
+	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct OrderParserRequirement<'a, 'b, R1, R2>
+pub struct OrderParserRequirement<R1, R2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
 {
 	first: R1,
 	second: R2,
-	_a: PhantomData<&'a ()>,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, R1, R2> OrderParserRequirement<'a, 'b, R1, R2>
+impl<R1, R2> OrderParserRequirement<R1, R2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
 {
 	pub fn new(first: R1, second: R2) -> Self
 	{
-		Self {
-			first,
-			second,
-			_a: PhantomData,
-			_b: PhantomData,
-		}
+		Self { first, second }
 	}
 
 	pub fn first(&self) -> &R1
@@ -46,7 +36,7 @@ where
 	}
 }
 
-impl<'a, 'b, R1, R2> Display for OrderParserRequirement<'a, 'b, R1, R2>
+impl<R1, R2> Display for OrderParserRequirement<R1, R2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,

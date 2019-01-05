@@ -10,25 +10,25 @@ use std::fmt::{
 };
 
 #[derive(Debug)]
-pub struct RepetitionParserError<'a, 'b, R, E>
+pub struct RepetitionParserError<R, E>
 where
 	R: Debug + Display,
 	E: Error,
 {
 	from: usize,
-	requirement: RepetitionParserRequirement<'a, 'b, R>,
+	requirement: RepetitionParserRequirement<R>,
 	found: usize,
 	cause: E,
 }
 
-impl<'a, 'b, R, E> RepetitionParserError<'a, 'b, R, E>
+impl<R, E> RepetitionParserError<R, E>
 where
 	R: Debug + Display,
 	E: Error,
 {
 	pub fn new(
 		from: usize,
-		requirement: RepetitionParserRequirement<'a, 'b, R>,
+		requirement: RepetitionParserRequirement<R>,
 		found: usize,
 		cause: E,
 	) -> Self
@@ -42,7 +42,7 @@ where
 	}
 }
 
-impl<'a, 'b, R, E> Error for RepetitionParserError<'a, 'b, R, E>
+impl<R, E> Error for RepetitionParserError<R, E>
 where
 	R: Debug + Display,
 	E: Error,
@@ -68,7 +68,7 @@ where
 	}
 }
 
-impl<'a, 'b, R, E> Display for RepetitionParserError<'a, 'b, R, E>
+impl<R, E> Display for RepetitionParserError<R, E>
 where
 	R: Debug + Display,
 	E: Error,

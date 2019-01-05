@@ -15,7 +15,7 @@ use std::fmt::{
 };
 
 #[derive(Debug)]
-pub struct GenParserError<'a, 'b, R1, R2, E1, E2>
+pub struct GenParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
@@ -23,11 +23,11 @@ where
 	E2: Error,
 {
 	from: usize,
-	requirement: GenParserRequirement<'a, 'b, R1, R2>,
+	requirement: GenParserRequirement<R1, R2>,
 	cause: Either<E1, E2>,
 }
 
-impl<'a, 'b, R1, R2, E1, E2> GenParserError<'a, 'b, R1, R2, E1, E2>
+impl<R1, R2, E1, E2> GenParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
@@ -36,7 +36,7 @@ where
 {
 	pub fn new(
 		from: usize,
-		requirement: GenParserRequirement<'a, 'b, R1, R2>,
+		requirement: GenParserRequirement<R1, R2>,
 		cause: Either<E1, E2>,
 	) -> Self
 	{
@@ -48,7 +48,7 @@ where
 	}
 }
 
-impl<'a, 'b, R1, R2, E1, E2> Error for GenParserError<'a, 'b, R1, R2, E1, E2>
+impl<R1, R2, E1, E2> Error for GenParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
@@ -84,7 +84,7 @@ where
 	}
 }
 
-impl<'a, 'b, R1, R2, E1, E2> Display for GenParserError<'a, 'b, R1, R2, E1, E2>
+impl<R1, R2, E1, E2> Display for GenParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,

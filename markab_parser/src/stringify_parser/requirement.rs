@@ -1,38 +1,29 @@
-use std::{
-	fmt::{
-		Debug,
-		Display,
-		Formatter,
-		Result as FmtResult,
-	},
-	marker::PhantomData,
+use std::fmt::{
+	Debug,
+	Display,
+	Formatter,
+	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct StringifyParserRequirement<'a, 'b, R>
+pub struct StringifyParserRequirement<R>
 where
 	R: Debug + Display,
 {
 	requirement: R,
-	_a: PhantomData<&'a ()>,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, R> StringifyParserRequirement<'a, 'b, R>
+impl<R> StringifyParserRequirement<R>
 where
 	R: Debug + Display,
 {
 	pub fn new(requirement: R) -> Self
 	{
-		Self {
-			requirement,
-			_a: PhantomData,
-			_b: PhantomData,
-		}
+		Self { requirement }
 	}
 }
 
-impl<'a, 'b, R> Display for StringifyParserRequirement<'a, 'b, R>
+impl<R> Display for StringifyParserRequirement<R>
 where
 	R: Debug + Display,
 {
