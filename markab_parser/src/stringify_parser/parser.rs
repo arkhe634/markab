@@ -8,39 +8,37 @@ use crate::{
 use std::marker::PhantomData;
 
 #[derive(Debug)]
-pub struct StringifyParser<'a, 'b, P>
+pub struct StringifyParser<'a, P>
 where
-	P: Parser<'a, 'b>,
+	P: Parser<'a>,
 {
 	requirement: P,
 	_a: PhantomData<&'a ()>,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, P> StringifyParser<'a, 'b, P>
+impl<'a, P> StringifyParser<'a, P>
 where
-	P: Parser<'a, 'b>,
+	P: Parser<'a>,
 {
 	pub fn new(requirement: P) -> Self
 	{
 		Self {
 			requirement,
 			_a: PhantomData,
-			_b: PhantomData,
 		}
 	}
 }
 
-impl<'a, 'b, P> Parser<'a, 'b> for StringifyParser<'a, 'b, P>
+impl<'a, P> Parser<'a> for StringifyParser<'a, P>
 where
-	P: Parser<'a, 'b>,
+	P: Parser<'a>,
 {
 	type Error = StringifyParserError<P::Requirement, P::Error>;
-	type Output = &'b str;
+	type Output = &'a str;
 	type Requirement = StringifyParserRequirement<P::Requirement>;
 	type RequirementContext = ();
 
-	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>
+	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>
 	{
 		let from = *pos;
 		self.requirement

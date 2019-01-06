@@ -8,20 +8,19 @@ use crate::{
 use std::marker::PhantomData;
 
 #[derive(Debug)]
-pub struct RepetitionParser<'a, 'b, P>
+pub struct RepetitionParser<'a, P>
 where
-	P: Parser<'a, 'b>,
+	P: Parser<'a>,
 {
 	requirement: P,
 	min: usize,
 	max: usize,
 	_a: PhantomData<&'a ()>,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, P> RepetitionParser<'a, 'b, P>
+impl<'a, P> RepetitionParser<'a, P>
 where
-	P: Parser<'a, 'b>,
+	P: Parser<'a>,
 {
 	pub fn new(requirement: P, min: usize, max: usize) -> Self
 	{
@@ -30,21 +29,20 @@ where
 			min,
 			max,
 			_a: PhantomData,
-			_b: PhantomData,
 		}
 	}
 }
 
-impl<'a, 'b, P> Parser<'a, 'b> for RepetitionParser<'a, 'b, P>
+impl<'a, P> Parser<'a> for RepetitionParser<'a, P>
 where
-	P: Parser<'a, 'b>,
+	P: Parser<'a>,
 {
 	type Error = RepetitionParserError<P::Requirement, P::Error>;
 	type Output = Vec<P::Output>;
 	type Requirement = RepetitionParserRequirement<P::Requirement>;
 	type RequirementContext = ();
 
-	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>
+	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>
 	{
 		let from = *pos;
 		let mut result = vec![];
@@ -70,7 +68,7 @@ where
 		Ok(result)
 	}
 
-	fn skip(&self, src: &'b str, pos: &mut usize) -> Option<Self::Error>
+	fn skip(&self, src: &'a str, pos: &mut usize) -> Option<Self::Error>
 	{
 		let from = *pos;
 		for i in 0..self.min

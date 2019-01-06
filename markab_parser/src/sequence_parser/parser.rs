@@ -12,21 +12,20 @@ use either::{
 use std::marker::PhantomData;
 
 #[derive(Debug)]
-pub struct SequenceParser<'a, 'b, P, Q>
+pub struct SequenceParser<'a, P, Q>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	P: Parser<'a>,
+	Q: Parser<'a>,
 {
 	first: P,
 	second: Q,
 	_a: PhantomData<&'a ()>,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, P, Q> SequenceParser<'a, 'b, P, Q>
+impl<'a, P, Q> SequenceParser<'a, P, Q>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	P: Parser<'a>,
+	Q: Parser<'a>,
 {
 	pub fn new(first: P, second: Q) -> Self
 	{
@@ -34,22 +33,21 @@ where
 			first,
 			second,
 			_a: PhantomData,
-			_b: PhantomData,
 		}
 	}
 }
 
-impl<'a, 'b, P, Q> Parser<'a, 'b> for SequenceParser<'a, 'b, P, Q>
+impl<'a, P, Q> Parser<'a> for SequenceParser<'a, P, Q>
 where
-	P: Parser<'a, 'b>,
-	Q: Parser<'a, 'b>,
+	P: Parser<'a>,
+	Q: Parser<'a>,
 {
 	type Error = SequenceParserError<P::Requirement, Q::Requirement, P::Error, Q::Error>;
 	type Output = (P::Output, Q::Output);
 	type Requirement = SequenceParserRequirement<P::Requirement, Q::Requirement>;
 	type RequirementContext = ();
 
-	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>
+	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>
 	{
 		let from = *pos;
 		let first = self
@@ -63,7 +61,7 @@ where
 		Ok((first, second))
 	}
 
-	fn skip(&self, src: &'b str, pos: &mut usize) -> Option<Self::Error>
+	fn skip(&self, src: &'a str, pos: &mut usize) -> Option<Self::Error>
 	{
 		let from = *pos;
 		self.first

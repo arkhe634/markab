@@ -3,21 +3,21 @@ use crate::{
 	Error,
 };
 
-pub trait Parseable<'a, 'b>
+pub trait Parseable<'a>
 {
 	type Error: Error;
 	type Output;
 
-	fn parse(src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>;
+	fn parse(src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>;
 
-	fn skip(src: &'b str, pos: &mut usize) -> Option<Self::Error>
+	fn skip(src: &'a str, pos: &mut usize) -> Option<Self::Error>
 	{
 		Self::parse(src, pos).err()
 	}
 
 	fn name() -> &'a str;
 
-	fn get_parser() -> ParseableParser<'a, 'b, Self>
+	fn get_parser() -> ParseableParser<'a, Self>
 	where
 		Self: Sized,
 	{

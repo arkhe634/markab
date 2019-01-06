@@ -6,16 +6,16 @@ use std::fmt::{
 };
 
 #[derive(Debug)]
-pub struct StringParserError<'a, 'b>
+pub struct StringParserError<'a>
 {
 	from: usize,
 	requirement: &'a str,
-	src: &'b str,
+	src: &'a str,
 }
 
-impl<'a, 'b> StringParserError<'a, 'b>
+impl<'a> StringParserError<'a>
 {
-	pub fn new(from: usize, requirement: &'a str, src: &'b str) -> Self
+	pub fn new(from: usize, requirement: &'a str, src: &'a str) -> Self
 	{
 		Self {
 			from,
@@ -25,7 +25,7 @@ impl<'a, 'b> StringParserError<'a, 'b>
 	}
 }
 
-impl<'a, 'b> Error for StringParserError<'a, 'b>
+impl<'a> Error for StringParserError<'a>
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -55,7 +55,7 @@ impl<'a, 'b> Error for StringParserError<'a, 'b>
 	}
 }
 
-impl<'a, 'b> Display for StringParserError<'a, 'b>
+impl<'a> Display for StringParserError<'a>
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
