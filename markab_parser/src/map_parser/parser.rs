@@ -43,7 +43,7 @@ where
 
 impl<'a, 'b, P, F, Q> Debug for MapParser<'a, 'b, P, F, Q>
 where
-	P: Parser<'a, 'b>,
+	P: Debug + Parser<'a, 'b>,
 	F: 'static + Fn(P::Output) -> Q,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult

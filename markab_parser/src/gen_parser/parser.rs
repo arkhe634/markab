@@ -49,7 +49,7 @@ where
 
 impl<'a, 'b, P, F, Q> Debug for GenParser<'a, 'b, P, F, Q>
 where
-	P: Parser<'a, 'b>,
+	P: Debug + Parser<'a, 'b>,
 	F: 'static + Fn(&P::Output) -> Q,
 	Q: Parser<'a, 'b>,
 {
