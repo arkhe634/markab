@@ -6,16 +6,16 @@ use std::fmt::{
 };
 
 #[derive(Debug)]
-pub struct StringParserError<'a, 'b>
+pub struct StringParserError<'a>
 {
 	from: usize,
 	requirement: &'a str,
-	src: &'b str,
+	src: &'a str,
 }
 
-impl<'a, 'b> StringParserError<'a, 'b>
+impl<'a> StringParserError<'a>
 {
-	pub fn new(from: usize, requirement: &'a str, src: &'b str) -> Self
+	pub fn new(from: usize, requirement: &'a str, src: &'a str) -> Self
 	{
 		Self {
 			from,
@@ -25,7 +25,7 @@ impl<'a, 'b> StringParserError<'a, 'b>
 	}
 }
 
-impl<'a, 'b> Error<'a, 'b> for StringParserError<'a, 'b>
+impl<'a> Error for StringParserError<'a>
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -53,30 +53,9 @@ impl<'a, 'b> Error<'a, 'b> for StringParserError<'a, 'b>
 	{
 		Ok(())
 	}
-
-	fn print(&self, f: &mut Formatter, depth: usize) -> FmtResult
-	{
-		for _ in 0..depth
-		{
-			write!(f, "\t")?;
-		}
-		write!(f, "at position ")?;
-		self.from(f)?;
-		write!(f, " required ")?;
-		self.requirement(f)?;
-		write!(f, " but ")?;
-		self.result(f)?;
-		write!(f, ".\n")?;
-		self.causes(f, depth + 1)
-	}
-
-	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
-	{
-		self.print(f, depth)
-	}
 }
 
-impl<'a, 'b> Display for StringParserError<'a, 'b>
+impl<'a> Display for StringParserError<'a>
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

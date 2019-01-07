@@ -10,22 +10,22 @@ use std::fmt::{
 };
 
 #[derive(Debug)]
-pub struct AndParserError<'a, 'b, R, E>
+pub struct AndParserError<R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	from: usize,
-	requirement: AndParserRequirement<'a, 'b, R>,
+	requirement: AndParserRequirement<R>,
 	cause: E,
 }
 
-impl<'a, 'b, R, E> AndParserError<'a, 'b, R, E>
+impl<R, E> AndParserError<R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
-	pub fn new(from: usize, requirement: AndParserRequirement<'a, 'b, R>, cause: E) -> Self
+	pub fn new(from: usize, requirement: AndParserRequirement<R>, cause: E) -> Self
 	{
 		Self {
 			from,
@@ -35,10 +35,10 @@ where
 	}
 }
 
-impl<'a, 'b, R, E> Error<'a, 'b> for AndParserError<'a, 'b, R, E>
+impl<R, E> Error for AndParserError<R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -58,26 +58,5 @@ where
 	fn causes(&self, f: &mut Formatter, depth: usize) -> FmtResult
 	{
 		self.cause.print(f, depth)
-	}
-
-	fn print(&self, f: &mut Formatter, depth: usize) -> FmtResult
-	{
-		for _ in 0..depth
-		{
-			write!(f, "\t")?;
-		}
-		write!(f, "at position ")?;
-		self.from(f)?;
-		write!(f, " required ")?;
-		self.requirement(f)?;
-		write!(f, " but ")?;
-		self.result(f)?;
-		write!(f, ".\n")?;
-		self.causes(f, depth + 1)
-	}
-
-	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
-	{
-		self.print(f, depth)
 	}
 }

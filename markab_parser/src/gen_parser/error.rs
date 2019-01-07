@@ -15,28 +15,28 @@ use std::fmt::{
 };
 
 #[derive(Debug)]
-pub struct GenParserError<'a, 'b, R1, R2, E1, E2>
+pub struct GenParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
-	E1: Error<'a, 'b>,
-	E2: Error<'a, 'b>,
+	E1: Error,
+	E2: Error,
 {
 	from: usize,
-	requirement: GenParserRequirement<'a, 'b, R1, R2>,
+	requirement: GenParserRequirement<R1, R2>,
 	cause: Either<E1, E2>,
 }
 
-impl<'a, 'b, R1, R2, E1, E2> GenParserError<'a, 'b, R1, R2, E1, E2>
+impl<R1, R2, E1, E2> GenParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
-	E1: Error<'a, 'b>,
-	E2: Error<'a, 'b>,
+	E1: Error,
+	E2: Error,
 {
 	pub fn new(
 		from: usize,
-		requirement: GenParserRequirement<'a, 'b, R1, R2>,
+		requirement: GenParserRequirement<R1, R2>,
 		cause: Either<E1, E2>,
 	) -> Self
 	{
@@ -48,12 +48,12 @@ where
 	}
 }
 
-impl<'a, 'b, R1, R2, E1, E2> Error<'a, 'b> for GenParserError<'a, 'b, R1, R2, E1, E2>
+impl<R1, R2, E1, E2> Error for GenParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
-	E1: Error<'a, 'b>,
-	E2: Error<'a, 'b>,
+	E1: Error,
+	E2: Error,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -82,35 +82,14 @@ where
 			Right(err) => err.print(f, depth),
 		}
 	}
-
-	fn print(&self, f: &mut Formatter, depth: usize) -> FmtResult
-	{
-		for _ in 0..depth
-		{
-			write!(f, "\t")?;
-		}
-		write!(f, "at position ")?;
-		self.from(f)?;
-		write!(f, " required ")?;
-		self.requirement(f)?;
-		write!(f, " but ")?;
-		self.result(f)?;
-		write!(f, ".\n")?;
-		self.causes(f, depth + 1)
-	}
-
-	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
-	{
-		self.print(f, depth)
-	}
 }
 
-impl<'a, 'b, R1, R2, E1, E2> Display for GenParserError<'a, 'b, R1, R2, E1, E2>
+impl<R1, R2, E1, E2> Display for GenParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
-	E1: Error<'a, 'b>,
-	E2: Error<'a, 'b>,
+	E1: Error,
+	E2: Error,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

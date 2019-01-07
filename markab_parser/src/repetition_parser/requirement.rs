@@ -5,23 +5,20 @@ use std::{
 		Formatter,
 		Result as FmtResult,
 	},
-	marker::PhantomData,
 	usize::MAX,
 };
 
 #[derive(Debug)]
-pub struct RepetitionParserRequirement<'a, 'b, R>
+pub struct RepetitionParserRequirement<R>
 where
 	R: Debug + Display,
 {
 	requirement: R,
 	min: usize,
 	max: usize,
-	_a: PhantomData<&'a ()>,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, R> RepetitionParserRequirement<'a, 'b, R>
+impl<R> RepetitionParserRequirement<R>
 where
 	R: Debug + Display,
 {
@@ -31,13 +28,11 @@ where
 			requirement,
 			min,
 			max,
-			_a: PhantomData,
-			_b: PhantomData,
 		}
 	}
 }
 
-impl<'a, 'b, R> Display for RepetitionParserRequirement<'a, 'b, R>
+impl<R> Display for RepetitionParserRequirement<R>
 where
 	R: Debug + Display,
 {

@@ -8,39 +8,37 @@ use crate::{
 use std::marker::PhantomData;
 
 #[derive(Debug)]
-pub struct AndParser<'a, 'b, P>
+pub struct AndParser<'a, P>
 where
-	P: Parser<'a, 'b>,
+	P: Parser<'a>,
 {
 	requirement: P,
 	_a: PhantomData<&'a ()>,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, P> AndParser<'a, 'b, P>
+impl<'a, P> AndParser<'a, P>
 where
-	P: Parser<'a, 'b>,
+	P: Parser<'a>,
 {
 	pub fn new(requirement: P) -> Self
 	{
 		Self {
 			requirement,
 			_a: PhantomData,
-			_b: PhantomData,
 		}
 	}
 }
 
-impl<'a, 'b, P> Parser<'a, 'b> for AndParser<'a, 'b, P>
+impl<'a, P> Parser<'a> for AndParser<'a, P>
 where
-	P: Parser<'a, 'b>,
+	P: Parser<'a>,
 {
-	type Error = AndParserError<'a, 'b, P::Requirement, P::Error>;
+	type Error = AndParserError<P::Requirement, P::Error>;
 	type Output = P::Output;
-	type Requirement = AndParserRequirement<'a, 'b, P::Requirement>;
+	type Requirement = AndParserRequirement<P::Requirement>;
 	type RequirementContext = ();
 
-	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>
+	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>
 	{
 		let from = *pos;
 		self.requirement

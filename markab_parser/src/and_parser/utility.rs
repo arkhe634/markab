@@ -3,9 +3,9 @@ use crate::{
 	Parser,
 };
 
-pub fn and<'a, 'b, P>(parser: P) -> AndParser<'a, 'b, P>
+pub fn and<'a, P>(parser: P) -> AndParser<'a, P>
 where
-	P: Parser<'a, 'b>,
+	P: Parser<'a>,
 {
 	AndParser::new(parser)
 }

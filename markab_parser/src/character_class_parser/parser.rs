@@ -23,14 +23,14 @@ impl<'a> CharacterClassParser<'a>
 	}
 }
 
-impl<'a, 'b> Parser<'a, 'b> for CharacterClassParser<'a>
+impl<'a> Parser<'a> for CharacterClassParser<'a>
 {
 	type Error = CharacterClassParserError<'a>;
-	type Output = &'b str;
+	type Output = &'a str;
 	type Requirement = CharacterClassParserRequirement<'a>;
 	type RequirementContext = ();
 
-	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>
+	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>
 	{
 		let from = *pos;
 		if let Some(next) = src[from..].chars().next()

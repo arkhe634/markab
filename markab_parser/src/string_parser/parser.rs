@@ -17,14 +17,14 @@ impl<'a> StringParser<'a>
 	}
 }
 
-impl<'a, 'b> Parser<'a, 'b> for StringParser<'a>
+impl<'a> Parser<'a> for StringParser<'a>
 {
-	type Error = StringParserError<'a, 'b>;
-	type Output = &'b str;
+	type Error = StringParserError<'a>;
+	type Output = &'a str;
 	type Requirement = &'a str;
 	type RequirementContext = ();
 
-	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>
+	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>
 	{
 		let from = *pos;
 		let len = self.requirement.len();
