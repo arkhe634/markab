@@ -5,21 +5,16 @@ use std::fmt::{
 	Result as FmtResult,
 };
 
-#[derive(Debug)]
-pub struct ParseableParserError<'a, E>
-where
-	E: Error,
+pub struct ParseableParserError<'a>
 {
 	from: usize,
 	requirement: &'a str,
-	cause: E,
+	cause: Box<Error>,
 }
 
-impl<'a, E> ParseableParserError<'a, E>
-where
-	E: Error,
+impl<'a> ParseableParserError<'a>
 {
-	pub fn new(from: usize, requirement: &'a str, cause: E) -> Self
+	pub fn new(from: usize, requirement: &'a str, cause: Box<Error>) -> Self
 	{
 		Self {
 			from,
@@ -29,9 +24,7 @@ where
 	}
 }
 
-impl<'a, E> Error for ParseableParserError<'a, E>
-where
-	E: Error,
+impl<'a> Error for ParseableParserError<'a>
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -54,9 +47,7 @@ where
 	}
 }
 
-impl<'a, E> Display for ParseableParserError<'a, E>
-where
-	E: Error,
+impl<'a> Display for ParseableParserError<'a>
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
