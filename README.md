@@ -75,3 +75,8 @@ Parseable trait provides static method `Parseable::parse` and
 ## Version 0.5.0
 
 + remove Parser type from parameter type of MapParserError.
+
+## Version 0.6.0
+
++ simplify lifetimes.
++ remove Error type from Parseable trait.(with boxing cost)
