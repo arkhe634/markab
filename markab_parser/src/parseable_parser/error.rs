@@ -9,12 +9,12 @@ pub struct ParseableParserError<'a>
 {
 	from: usize,
 	requirement: &'a str,
-	cause: Box<Error>,
+	cause: Box<'a + Error>,
 }
 
 impl<'a> ParseableParserError<'a>
 {
-	pub fn new(from: usize, requirement: &'a str, cause: Box<Error>) -> Self
+	pub fn new(from: usize, requirement: &'a str, cause: Box<'a + Error>) -> Self
 	{
 		Self {
 			from,
