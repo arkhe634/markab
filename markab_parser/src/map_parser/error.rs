@@ -10,22 +10,22 @@ use std::fmt::{
 };
 
 #[derive(Debug)]
-pub struct MapParserError<'a, 'b, R, E>
+pub struct MapParserError<R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	from: usize,
-	requirement: MapParserRequirement<'a, 'b, R>,
+	requirement: MapParserRequirement<R>,
 	cause: E,
 }
 
-impl<'a, 'b, R, E> MapParserError<'a, 'b, R, E>
+impl<R, E> MapParserError<R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
-	pub fn new(from: usize, requirement: MapParserRequirement<'a, 'b, R>, cause: E) -> Self
+	pub fn new(from: usize, requirement: MapParserRequirement<R>, cause: E) -> Self
 	{
 		Self {
 			from,
@@ -35,10 +35,10 @@ where
 	}
 }
 
-impl<'a, 'b, R, E> Error<'a, 'b> for MapParserError<'a, 'b, R, E>
+impl<R, E> Error for MapParserError<R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -64,28 +64,12 @@ where
 	{
 		self.causes(f, depth)
 	}
-
-	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
-	{
-		for _ in 0..depth
-		{
-			write!(f, "\t")?;
-		}
-		write!(f, "at position ")?;
-		self.from(f)?;
-		write!(f, " required ")?;
-		self.requirement(f)?;
-		write!(f, " but ")?;
-		self.result(f)?;
-		write!(f, ".\n")?;
-		self.causes(f, depth + 1)
-	}
 }
 
-impl<'a, 'b, R, E> Display for MapParserError<'a, 'b, R, E>
+impl<R, E> Display for MapParserError<R, E>
 where
 	R: Debug + Display,
-	E: Error<'a, 'b>,
+	E: Error,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

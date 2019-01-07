@@ -10,30 +10,26 @@ use std::fmt::{
 };
 
 #[derive(Debug)]
-pub struct OrderParserError<'a, 'b, R1, R2, E1, E2>
+pub struct OrderParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
-	E1: Error<'a, 'b>,
-	E2: Error<'a, 'b>,
+	E1: Error,
+	E2: Error,
 {
 	from: usize,
-	requirement: OrderParserRequirement<'a, 'b, R1, R2>,
+	requirement: OrderParserRequirement<R1, R2>,
 	cause: (E1, E2),
 }
 
-impl<'a, 'b, R1, R2, E1, E2> OrderParserError<'a, 'b, R1, R2, E1, E2>
+impl<R1, R2, E1, E2> OrderParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
-	E1: Error<'a, 'b>,
-	E2: Error<'a, 'b>,
+	E1: Error,
+	E2: Error,
 {
-	pub fn new(
-		from: usize,
-		requirement: OrderParserRequirement<'a, 'b, R1, R2>,
-		cause: (E1, E2),
-	) -> Self
+	pub fn new(from: usize, requirement: OrderParserRequirement<R1, R2>, cause: (E1, E2)) -> Self
 	{
 		Self {
 			from,
@@ -43,12 +39,12 @@ where
 	}
 }
 
-impl<'a, 'b, R1, R2, E1, E2> Error<'a, 'b> for OrderParserError<'a, 'b, R1, R2, E1, E2>
+impl<R1, R2, E1, E2> Error for OrderParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
-	E1: Error<'a, 'b>,
-	E2: Error<'a, 'b>,
+	E1: Error,
+	E2: Error,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -70,35 +66,14 @@ where
 		self.cause.0.print(f, depth)?;
 		self.cause.1.print(f, depth)
 	}
-
-	fn print(&self, f: &mut Formatter, depth: usize) -> FmtResult
-	{
-		for _ in 0..depth
-		{
-			write!(f, "\t")?;
-		}
-		write!(f, "at position ")?;
-		self.from(f)?;
-		write!(f, " required ")?;
-		self.requirement(f)?;
-		write!(f, " but ")?;
-		self.result(f)?;
-		write!(f, ".\n")?;
-		self.causes(f, depth + 1)
-	}
-
-	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
-	{
-		self.print(f, depth)
-	}
 }
 
-impl<'a, 'b, R1, R2, E1, E2> Display for OrderParserError<'a, 'b, R1, R2, E1, E2>
+impl<R1, R2, E1, E2> Display for OrderParserError<R1, R2, E1, E2>
 where
 	R1: Debug + Display,
 	R2: Debug + Display,
-	E1: Error<'a, 'b>,
-	E2: Error<'a, 'b>,
+	E1: Error,
+	E2: Error,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

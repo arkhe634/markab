@@ -1,42 +1,30 @@
 use crate::Error;
-use std::{
-	fmt::{
-		Display,
-		Formatter,
-		Result as FmtResult,
-	},
-	marker::PhantomData,
+use std::fmt::{
+	Display,
+	Formatter,
+	Result as FmtResult,
 };
 
-#[derive(Debug)]
-pub struct ParseableParserError<'a, 'b, E>
-where
-	E: Error<'a, 'b>,
+pub struct ParseableParserError<'a>
 {
 	from: usize,
 	requirement: &'a str,
-	cause: E,
-	_b: PhantomData<&'b ()>,
+	cause: Box<'a + Error>,
 }
 
-impl<'a, 'b, E> ParseableParserError<'a, 'b, E>
-where
-	E: Error<'a, 'b>,
+impl<'a> ParseableParserError<'a>
 {
-	pub fn new(from: usize, requirement: &'a str, cause: E) -> Self
+	pub fn new(from: usize, requirement: &'a str, cause: Box<'a + Error>) -> Self
 	{
 		Self {
 			from,
 			requirement,
 			cause,
-			_b: PhantomData,
 		}
 	}
 }
 
-impl<'a, 'b, E> Error<'a, 'b> for ParseableParserError<'a, 'b, E>
-where
-	E: Error<'a, 'b>,
+impl<'a> Error for ParseableParserError<'a>
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -57,32 +45,9 @@ where
 	{
 		self.cause.print(f, depth)
 	}
-
-	fn print(&self, f: &mut Formatter, depth: usize) -> FmtResult
-	{
-		for _ in 0..depth
-		{
-			write!(f, "\t")?;
-		}
-		write!(f, "at position ")?;
-		self.from(f)?;
-		write!(f, " required ")?;
-		self.requirement(f)?;
-		write!(f, " but ")?;
-		self.result(f)?;
-		write!(f, ".\n")?;
-		self.causes(f, depth + 1)
-	}
-
-	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
-	{
-		self.print(f, depth)
-	}
 }
 
-impl<'a, 'b, E> Display for ParseableParserError<'a, 'b, E>
-where
-	E: Error<'a, 'b>,
+impl<'a> Display for ParseableParserError<'a>
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

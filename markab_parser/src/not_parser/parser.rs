@@ -8,42 +8,37 @@ use crate::{
 use std::marker::PhantomData;
 
 #[derive(Debug)]
-pub struct NotParser<'a, 'b, P>
+pub struct NotParser<'a, P>
 where
-	P: Parser<'a, 'b>,
-	'a: 'b,
+	P: Parser<'a>,
 {
 	requirement: P,
 	_a: PhantomData<&'a ()>,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, P> NotParser<'a, 'b, P>
+impl<'a, P> NotParser<'a, P>
 where
-	P: Parser<'a, 'b>,
-	'a: 'b,
+	P: Parser<'a>,
 {
 	pub fn new(requirement: P) -> Self
 	{
 		Self {
 			requirement,
 			_a: PhantomData,
-			_b: PhantomData,
 		}
 	}
 }
 
-impl<'a, 'b, P> Parser<'a, 'b> for NotParser<'a, 'b, P>
+impl<'a, P> Parser<'a> for NotParser<'a, P>
 where
-	P: Parser<'a, 'b>,
-	'a: 'b,
+	P: Parser<'a>,
 {
-	type Error = NotParserError<'a, 'b, P::Requirement, P::Output>;
+	type Error = NotParserError<P::Requirement, P::Output>;
 	type Output = P::Error;
-	type Requirement = NotParserRequirement<'a, 'b, P::Requirement>;
+	type Requirement = NotParserRequirement<P::Requirement>;
 	type RequirementContext = ();
 
-	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>
+	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>
 	{
 		let from = *pos;
 		match self.requirement.parse(src, pos)

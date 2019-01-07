@@ -3,9 +3,9 @@ use crate::{
 	Parser,
 };
 
-pub fn not<'a, 'b, P>(parser: P) -> NotParser<'a, 'b, P>
+pub fn not<'a, P>(parser: P) -> NotParser<'a, P>
 where
-	P: Parser<'a, 'b>,
+	P: Parser<'a>,
 {
 	NotParser::new(parser)
 }

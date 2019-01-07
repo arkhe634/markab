@@ -32,7 +32,7 @@ impl<'a> CharacterClassParserError<'a>
 	}
 }
 
-impl<'a, 'b> Error<'a, 'b> for CharacterClassParserError<'a>
+impl<'a> Error for CharacterClassParserError<'a>
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -56,27 +56,6 @@ impl<'a, 'b> Error<'a, 'b> for CharacterClassParserError<'a>
 	fn causes(&self, _: &mut Formatter, _: usize) -> FmtResult
 	{
 		Ok(())
-	}
-
-	fn print(&self, f: &mut Formatter, depth: usize) -> FmtResult
-	{
-		for _ in 0..depth
-		{
-			write!(f, "\t")?;
-		}
-		write!(f, "at position ")?;
-		self.from(f)?;
-		write!(f, " required ")?;
-		self.requirement(f)?;
-		write!(f, " but ")?;
-		self.result(f)?;
-		write!(f, ".\n")?;
-		self.causes(f, depth + 1)
-	}
-
-	fn print_full(&self, f: &mut Formatter, depth: usize) -> FmtResult
-	{
-		self.print(f, depth)
 	}
 }
 

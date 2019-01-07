@@ -14,20 +14,19 @@ use std::{
 	marker::PhantomData,
 };
 
-pub struct MapParser<'a, 'b, P, F, Q>
+pub struct MapParser<'a, P, F, Q>
 where
-	P: Parser<'a, 'b>,
+	P: Parser<'a>,
 	F: 'static + Fn(P::Output) -> Q,
 {
 	requirement: P,
 	mapper: F,
 	_a: PhantomData<&'a ()>,
-	_b: PhantomData<&'b ()>,
 }
 
-impl<'a, 'b, P, F, Q> MapParser<'a, 'b, P, F, Q>
+impl<'a, P, F, Q> MapParser<'a, P, F, Q>
 where
-	P: Parser<'a, 'b>,
+	P: Parser<'a>,
 	F: 'static + Fn(P::Output) -> Q,
 {
 	pub fn new(requirement: P, mapper: F) -> Self
@@ -36,14 +35,13 @@ where
 			requirement,
 			mapper,
 			_a: PhantomData,
-			_b: PhantomData,
 		}
 	}
 }
 
-impl<'a, 'b, P, F, Q> Debug for MapParser<'a, 'b, P, F, Q>
+impl<'a, P, F, Q> Debug for MapParser<'a, P, F, Q>
 where
-	P: Parser<'a, 'b>,
+	P: Debug + Parser<'a>,
 	F: 'static + Fn(P::Output) -> Q,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
@@ -55,17 +53,17 @@ where
 	}
 }
 
-impl<'a, 'b, P, F, Q> Parser<'a, 'b> for MapParser<'a, 'b, P, F, Q>
+impl<'a, P, F, Q> Parser<'a> for MapParser<'a, P, F, Q>
 where
-	P: Parser<'a, 'b>,
+	P: Parser<'a>,
 	F: 'static + Fn(P::Output) -> Q,
 {
-	type Error = MapParserError<'a, 'b, P::Requirement, P::Error>;
+	type Error = MapParserError<P::Requirement, P::Error>;
 	type Output = Q;
-	type Requirement = MapParserRequirement<'a, 'b, P::Requirement>;
+	type Requirement = MapParserRequirement<P::Requirement>;
 	type RequirementContext = ();
 
-	fn parse(&self, src: &'b str, pos: &mut usize) -> Result<Self::Output, Self::Error>
+	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>
 	{
 		let from = *pos;
 		self.requirement
@@ -74,7 +72,7 @@ where
 			.map_err(|err| MapParserError::new(from, self.requirement(None), err))
 	}
 
-	fn skip(&self, src: &'b str, pos: &mut usize) -> Option<Self::Error>
+	fn skip(&self, src: &'a str, pos: &mut usize) -> Option<Self::Error>
 	{
 		let from = *pos;
 		self.requirement
