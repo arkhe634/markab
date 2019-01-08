@@ -54,10 +54,9 @@ pub trait Parser<'a>
 		MapParser::new(self, mapper)
 	}
 
-	fn and_gen<F, P>(self, generator: F) -> GenParser<'a, Self, F, P>
+	fn and_gen<P>(self, generator: &'a Fn(&Self::Output) -> P) -> GenParser<'a, Self, P>
 	where
 		Self: Sized,
-		F: 'static + Fn(&Self::Output) -> P,
 		P: Parser<'a>,
 	{
 		GenParser::new(self, generator)

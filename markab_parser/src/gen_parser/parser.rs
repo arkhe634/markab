@@ -18,24 +18,22 @@ use std::{
 	marker::PhantomData,
 };
 
-pub struct GenParser<'a, P, F, Q>
+pub struct GenParser<'a, P, Q>
 where
-	P: Parser<'a>,
-	F: 'static + Fn(&P::Output) -> Q,
+	P: 'a + Parser<'a>,
 	Q: Parser<'a>,
 {
 	requirement: P,
-	generator: F,
+	generator: &'a Fn(&P::Output) -> Q,
 	_a: PhantomData<&'a ()>,
 }
 
-impl<'a, P, F, Q> GenParser<'a, P, F, Q>
+impl<'a, P, Q> GenParser<'a, P, Q>
 where
 	P: Parser<'a>,
-	F: 'static + Fn(&P::Output) -> Q,
 	Q: Parser<'a>,
 {
-	pub fn new(requirement: P, generator: F) -> Self
+	pub fn new(requirement: P, generator: &'a Fn(&P::Output) -> Q) -> Self
 	{
 		Self {
 			requirement,
@@ -45,10 +43,9 @@ where
 	}
 }
 
-impl<'a, P, F, Q> Debug for GenParser<'a, P, F, Q>
+impl<'a, P, Q> Debug for GenParser<'a, P, Q>
 where
 	P: Debug + Parser<'a>,
-	F: 'static + Fn(&P::Output) -> Q,
 	Q: Parser<'a>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
@@ -60,10 +57,9 @@ where
 	}
 }
 
-impl<'a, P, F, Q> Parser<'a> for GenParser<'a, P, F, Q>
+impl<'a, P, Q> Parser<'a> for GenParser<'a, P, Q>
 where
 	P: Parser<'a>,
-	F: 'static + Fn(&P::Output) -> Q,
 	Q: Parser<'a>,
 {
 	type Error = GenParserError<P::Requirement, Q::Requirement, P::Error, Q::Error>;
