@@ -5,58 +5,32 @@ use crate::{
 	},
 	Parser,
 };
-use std::{
-	fmt::{
-		Debug,
-		Formatter,
-		Result as FmtResult,
-	},
-	marker::PhantomData,
-};
 
-pub struct MapParser<'a, P, F, Q>
+pub struct MapParser<'a, P, Q>
 where
-	P: Parser<'a>,
-	F: 'static + Fn(P::Output) -> Q,
+	P: 'a + Parser<'a>,
 {
 	requirement: P,
-	mapper: F,
-	_a: PhantomData<&'a ()>,
+	mapper: &'a Fn(P::Output) -> Q,
 }
 
-impl<'a, P, F, Q> MapParser<'a, P, F, Q>
+impl<'a, P, Q> MapParser<'a, P, Q>
 where
 	P: Parser<'a>,
-	F: 'static + Fn(P::Output) -> Q,
 {
-	pub fn new(requirement: P, mapper: F) -> Self
+	pub fn new(requirement: P, mapper: &'a Fn(P::Output) -> Q) -> Self
 	{
 		Self {
 			requirement,
 			mapper,
-			_a: PhantomData,
+			// 	_a: PhantomData,
 		}
 	}
 }
 
-impl<'a, P, F, Q> Debug for MapParser<'a, P, F, Q>
-where
-	P: Debug + Parser<'a>,
-	F: 'static + Fn(P::Output) -> Q,
-{
-	fn fmt(&self, f: &mut Formatter) -> FmtResult
-	{
-		f.debug_struct("MapParser")
-			.field("requirement", &self.requirement)
-			.field("mapper", &"..")
-			.finish()
-	}
-}
-
-impl<'a, P, F, Q> Parser<'a> for MapParser<'a, P, F, Q>
+impl<'a, P, Q> Parser<'a> for MapParser<'a, P, Q>
 where
 	P: Parser<'a>,
-	F: 'static + Fn(P::Output) -> Q,
 {
 	type Error = MapParserError<P::Requirement, P::Error>;
 	type Output = Q;
@@ -84,4 +58,15 @@ where
 	{
 		MapParserRequirement::new(self.requirement.requirement(None))
 	}
+}
+
+#[test]
+fn test()
+{
+	use crate::string;
+	let parser = string("test");
+	let parser = parser.map(&|s| s.to_owned());
+	let src = "test";
+	let mut pos = 0;
+	let res = parser.parse(src, &mut pos);
 }

@@ -47,11 +47,9 @@ pub trait Parser<'a>
 		OrderParser::new(self, next)
 	}
 
-	fn map<F, P>(self, mapper: F) -> MapParser<'a, Self, F, P>
+	fn map<P>(self, mapper: &'a Fn(Self::Output) -> P) -> MapParser<'a, Self, P>
 	where
 		Self: Sized,
-		F: 'static + Fn(Self::Output) -> P,
-		P: 'a,
 	{
 		MapParser::new(self, mapper)
 	}

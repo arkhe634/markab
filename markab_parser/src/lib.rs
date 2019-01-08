@@ -50,7 +50,7 @@
 //! let map = character_class(false, &[], &['0'..'9'])
 //! 	.one_or_more()
 //! 	.stringify()
-//! 	.map(|num| num.parse::<usize>().unwrap());
+//! 	.map(&|num| num.parse::<usize>().unwrap());
 //! ```
 //!
 //! # Create new parser
