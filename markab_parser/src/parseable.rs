@@ -10,9 +10,9 @@ pub trait Parseable<'a>
 
 	fn parse(src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>;
 
-	fn skip(src: &'a str, pos: &mut usize) -> Option<Self::Error>
+	fn skip(src: &'a str, pos: &mut usize) -> Result<(), Self::Error>
 	{
-		Self::parse(src, pos).err()
+		Self::parse(src, pos).map(|_| ())
 	}
 
 	fn name() -> &'a str;

@@ -24,9 +24,9 @@ pub trait Parser<'a>: Debug
 
 	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>;
 
-	fn skip(&self, src: &'a str, pos: &mut usize) -> Option<Self::Error>
+	fn skip(&self, src: &'a str, pos: &mut usize) -> Result<(), Self::Error>
 	{
-		self.parse(src, pos).err()
+		self.parse(src, pos).map(|_| ())
 	}
 
 	fn requirement(&self, context: Option<&Self::RequirementContext>) -> Self::Requirement;

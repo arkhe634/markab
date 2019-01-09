@@ -61,16 +61,16 @@ where
 		Ok((first, second))
 	}
 
-	fn skip(&self, src: &'a str, pos: &mut usize) -> Option<Self::Error>
+	fn skip(&self, src: &'a str, pos: &mut usize) -> Result<(), Self::Error>
 	{
 		let from = *pos;
 		self.first
 			.skip(src, pos)
-			.map(|err| SequenceParserError::new(from, self.requirement(None), Left(err)))
-			.or_else(|| {
-				self.second
-					.skip(src, pos)
-					.map(|err| SequenceParserError::new(from, self.requirement(None), Right(err)))
+			.map_err(|err| SequenceParserError::new(from, self.requirement(None), Left(err)))
+			.and_then(|_| {
+				self.second.skip(src, pos).map_err(|err| {
+					SequenceParserError::new(from, self.requirement(None), Right(err))
+				})
 			})
 	}
 

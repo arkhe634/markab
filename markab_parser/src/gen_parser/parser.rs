@@ -76,18 +76,18 @@ where
 		Ok((res1, res2))
 	}
 
-	fn skip(&self, src: &'a str, pos: &mut usize) -> Option<Self::Error>
+	fn skip(&self, src: &'a str, pos: &mut usize) -> Result<(), Self::Error>
 	{
 		let from = *pos;
 		let res1 = match self.requirement.parse(src, pos)
 		{
 			Ok(ok) => ok,
-			Err(err) => return Some(GenParserError::new(from, self.requirement(None), Left(err))),
+			Err(err) => return Err(GenParserError::new(from, self.requirement(None), Left(err))),
 		};
 		let parser = (self.generator)(&res1);
 		parser
 			.skip(src, pos)
-			.map(|err| GenParserError::new(from, self.requirement(None), Right(err)))
+			.map_err(|err| GenParserError::new(from, self.requirement(None), Right(err)))
 	}
 
 	fn requirement(&self, context: Option<&Self::RequirementContext>) -> Self::Requirement

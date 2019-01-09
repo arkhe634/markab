@@ -68,14 +68,19 @@ where
 		))
 	}
 
-	fn skip(&self, src: &'a str, pos: &mut usize) -> Option<Self::Error>
+	fn skip(&self, src: &'a str, pos: &mut usize) -> Result<(), Self::Error>
 	{
 		let from = *pos;
-		self.first.skip(src, pos).and_then(|first| {
-			self.second
-				.skip(src, pos)
-				.map(|second| OrderParserError::new(from, self.requirement(None), (first, second)))
-		})
+		match self.first.skip(src, pos)
+		{
+			Ok(()) => Ok(()),
+			Err(first) =>
+			{
+				self.second.skip(src, pos).map_err(|second| {
+					OrderParserError::new(from, self.requirement(None), (first, second))
+				})
+			}
+		}
 	}
 
 	fn requirement(&self, _: Option<&Self::RequirementContext>) -> Self::Requirement

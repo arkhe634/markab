@@ -60,10 +60,10 @@ where
 		P::parse(src, pos).map_err(|err| ParseableParserError::new(from, P::name(), err))
 	}
 
-	fn skip(&self, src: &'a str, pos: &mut usize) -> Option<Self::Error>
+	fn skip(&self, src: &'a str, pos: &mut usize) -> Result<(), Self::Error>
 	{
 		let from = *pos;
-		P::skip(src, pos).map(|err| ParseableParserError::new(from, P::name(), err))
+		P::skip(src, pos).map_err(|err| ParseableParserError::new(from, P::name(), err))
 	}
 
 	fn requirement(&self, _: Option<&Self::RequirementContext>) -> Self::Requirement

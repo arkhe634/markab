@@ -68,7 +68,7 @@ where
 		Ok(result)
 	}
 
-	fn skip(&self, src: &'a str, pos: &mut usize) -> Option<Self::Error>
+	fn skip(&self, src: &'a str, pos: &mut usize) -> Result<(), Self::Error>
 	{
 		let from = *pos;
 		for i in 0..self.min
@@ -76,7 +76,7 @@ where
 			if let Err(err) = self.requirement.parse(src, pos)
 			{
 				*pos = from;
-				return Some(RepetitionParserError::new(
+				return Err(RepetitionParserError::new(
 					from,
 					self.requirement(None),
 					i,
@@ -91,7 +91,7 @@ where
 				break;
 			}
 		}
-		None
+		Ok(())
 	}
 
 	fn requirement(&self, _: Option<&Self::RequirementContext>) -> Self::Requirement
