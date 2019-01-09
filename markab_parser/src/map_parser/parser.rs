@@ -11,29 +11,28 @@ use std::fmt::{
 	Result as FmtResult,
 };
 
-pub struct MapParser<'a, P, Q>
+pub struct MapParser<'a, P, R>
 where
 	P: 'a + Parser<'a>,
 {
 	requirement: P,
-	mapper: &'a Fn(P::Output) -> Q,
+	mapper: &'a Fn(P::Output) -> R,
 }
 
-impl<'a, P, Q> MapParser<'a, P, Q>
+impl<'a, P, R> MapParser<'a, P, R>
 where
 	P: Parser<'a>,
 {
-	pub fn new(requirement: P, mapper: &'a Fn(P::Output) -> Q) -> Self
+	pub fn new(requirement: P, mapper: &'a Fn(P::Output) -> R) -> Self
 	{
 		Self {
 			requirement,
 			mapper,
-			// 	_a: PhantomData,
 		}
 	}
 }
 
-impl<'a, P, Q> Debug for MapParser<'a, P, Q>
+impl<'a, P, R> Debug for MapParser<'a, P, R>
 where
 	P: Parser<'a>,
 {
@@ -46,13 +45,13 @@ where
 	}
 }
 
-impl<'a, P, Q> Parser<'a> for MapParser<'a, P, Q>
+impl<'a, P, R> Parser<'a> for MapParser<'a, P, R>
 where
 	P: Parser<'a>,
 {
-	type Error = MapParserError<P::Requirement, P::Error>;
-	type Output = Q;
-	type Requirement = MapParserRequirement<P::Requirement>;
+	type Error = MapParserError<'a, P>;
+	type Output = R;
+	type Requirement = MapParserRequirement<'a, P>;
 	type RequirementContext = ();
 
 	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>

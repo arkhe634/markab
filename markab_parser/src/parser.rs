@@ -47,7 +47,7 @@ pub trait Parser<'a>: Debug
 		OrderParser::new(self, next)
 	}
 
-	fn map<P>(self, mapper: &'a Fn(Self::Output) -> P) -> MapParser<'a, Self, P>
+	fn map<R>(self, mapper: &'a Fn(Self::Output) -> R) -> MapParser<'a, Self, R>
 	where
 		Self: Sized,
 	{
