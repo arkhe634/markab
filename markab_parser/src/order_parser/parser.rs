@@ -1,4 +1,6 @@
 use crate::{
+	equal::Equal,
+	map_parser::MapParser,
 	order_parser::{
 		OrderParserError,
 		OrderParserRequirement,
@@ -35,6 +37,24 @@ where
 			second,
 			_a: PhantomData,
 		}
+	}
+}
+
+impl<'a, P1, P2> OrderParser<'a, P1, P2>
+where
+	P1: Parser<'a>,
+	P2: Parser<'a>,
+	P2::Output: Equal<P1::Output>,
+{
+	pub fn merge(self) -> MapParser<'a, Self, P1::Output>
+	{
+		self.map(&|res| {
+			match res
+			{
+				Left(first) => first,
+				Right(second) => second.ident(),
+			}
+		})
 	}
 }
 

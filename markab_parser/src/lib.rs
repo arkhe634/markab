@@ -66,6 +66,7 @@
 pub mod and_parser;
 pub mod character_class_parser;
 pub mod character_parser;
+mod equal;
 mod error;
 pub mod gen_parser;
 pub mod map_parser;
