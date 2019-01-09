@@ -1,4 +1,6 @@
 use crate::{
+	equal::Equal,
+	map_parser::MapParser,
 	order_parser::{
 		OrderParserError,
 		OrderParserRequirement,
@@ -13,22 +15,22 @@ use either::{
 use std::marker::PhantomData;
 
 #[derive(Debug)]
-pub struct OrderParser<'a, P, Q>
+pub struct OrderParser<'a, P1, P2>
 where
-	P: Parser<'a>,
-	Q: Parser<'a>,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
-	first: P,
-	second: Q,
+	first: P1,
+	second: P2,
 	_a: PhantomData<&'a ()>,
 }
 
-impl<'a, P, Q> OrderParser<'a, P, Q>
+impl<'a, P1, P2> OrderParser<'a, P1, P2>
 where
-	P: Parser<'a>,
-	Q: Parser<'a>,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
-	pub fn new(first: P, second: Q) -> Self
+	pub fn new(first: P1, second: P2) -> Self
 	{
 		Self {
 			first,
@@ -38,14 +40,32 @@ where
 	}
 }
 
-impl<'a, P, Q> Parser<'a> for OrderParser<'a, P, Q>
+impl<'a, P1, P2> OrderParser<'a, P1, P2>
 where
-	P: Parser<'a>,
-	Q: Parser<'a>,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
+	P2::Output: Equal<P1::Output>,
 {
-	type Error = OrderParserError<P::Requirement, Q::Requirement, P::Error, Q::Error>;
-	type Output = Either<P::Output, Q::Output>;
-	type Requirement = OrderParserRequirement<P::Requirement, Q::Requirement>;
+	pub fn merge(self) -> MapParser<'a, Self, P1::Output>
+	{
+		self.map(&|res| {
+			match res
+			{
+				Left(first) => first,
+				Right(second) => second.ident(),
+			}
+		})
+	}
+}
+
+impl<'a, P1, P2> Parser<'a> for OrderParser<'a, P1, P2>
+where
+	P1: Parser<'a>,
+	P2: Parser<'a>,
+{
+	type Error = OrderParserError<'a, P1, P2>;
+	type Output = Either<P1::Output, P2::Output>;
+	type Requirement = OrderParserRequirement<'a, P1, P2>;
 	type RequirementContext = ();
 
 	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>
@@ -68,14 +88,19 @@ where
 		))
 	}
 
-	fn skip(&self, src: &'a str, pos: &mut usize) -> Option<Self::Error>
+	fn skip(&self, src: &'a str, pos: &mut usize) -> Result<(), Self::Error>
 	{
 		let from = *pos;
-		self.first.skip(src, pos).and_then(|first| {
-			self.second
-				.skip(src, pos)
-				.map(|second| OrderParserError::new(from, self.requirement(None), (first, second)))
-		})
+		match self.first.skip(src, pos)
+		{
+			Ok(()) => Ok(()),
+			Err(first) =>
+			{
+				self.second.skip(src, pos).map_err(|second| {
+					OrderParserError::new(from, self.requirement(None), (first, second))
+				})
+			}
+		}
 	}
 
 	fn requirement(&self, _: Option<&Self::RequirementContext>) -> Self::Requirement

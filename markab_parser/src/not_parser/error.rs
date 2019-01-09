@@ -1,29 +1,29 @@
 use crate::{
 	not_parser::NotParserRequirement,
 	Error,
+	Parser,
 };
 use std::fmt::{
-	Debug,
 	Display,
 	Formatter,
 	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct NotParserError<R, E>
+pub struct NotParserError<'a, P>
 where
-	R: Debug + Display,
+	P: Parser<'a>,
 {
 	from: usize,
-	requirement: NotParserRequirement<R>,
-	cause: E,
+	requirement: NotParserRequirement<'a, P>,
+	cause: P::Output,
 }
 
-impl<R, E> NotParserError<R, E>
+impl<'a, P> NotParserError<'a, P>
 where
-	R: Debug + Display,
+	P: Parser<'a>,
 {
-	pub fn new(from: usize, requirement: NotParserRequirement<R>, cause: E) -> Self
+	pub fn new(from: usize, requirement: NotParserRequirement<'a, P>, cause: P::Output) -> Self
 	{
 		Self {
 			from,
@@ -32,15 +32,15 @@ where
 		}
 	}
 
-	pub fn cause(&self) -> &E
+	pub fn cause(&self) -> &P::Output
 	{
 		&self.cause
 	}
 }
 
-impl<R, E> Error for NotParserError<R, E>
+impl<'a, P> Error for NotParserError<'a, P>
 where
-	R: Debug + Display,
+	P: Parser<'a>,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -63,9 +63,9 @@ where
 	}
 }
 
-impl<R, E> Display for NotParserError<R, E>
+impl<'a, P> Display for NotParserError<'a, P>
 where
-	R: Debug + Display,
+	P: Parser<'a>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

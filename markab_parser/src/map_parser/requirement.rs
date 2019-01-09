@@ -1,36 +1,36 @@
+use crate::Parser;
 use std::fmt::{
-	Debug,
 	Display,
 	Formatter,
 	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct MapParserRequirement<R>
+pub struct MapParserRequirement<'a, P>
 where
-	R: Debug + Display,
+	P: Parser<'a>,
 {
-	requirement: R,
+	requirement: P::Requirement,
 }
 
-impl<R> MapParserRequirement<R>
+impl<'a, P> MapParserRequirement<'a, P>
 where
-	R: Debug + Display,
+	P: Parser<'a>,
 {
-	pub fn new(requirement: R) -> Self
+	pub fn new(requirement: P::Requirement) -> Self
 	{
 		Self { requirement }
 	}
 
-	pub fn requirement(&self) -> &R
+	pub fn requirement(&self) -> &P::Requirement
 	{
 		&self.requirement
 	}
 }
 
-impl<R> Display for MapParserRequirement<R>
+impl<'a, P> Display for MapParserRequirement<'a, P>
 where
-	R: Debug + Display,
+	P: Parser<'a>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

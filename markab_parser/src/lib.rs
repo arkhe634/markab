@@ -50,22 +50,54 @@
 //! let map = character_class(false, &[], &['0'..'9'])
 //! 	.one_or_more()
 //! 	.stringify()
-//! 	.map(|num| num.parse::<usize>().unwrap());
+//! 	.map(&|num| num.parse::<usize>().unwrap());
 //! ```
 //!
 //! # Create new parser
 //! If the parser has parameters, you should implement [Parser] trait.
 //! If the parser does not have parameters, you should implement [Parseable] trait.
 //! Parseable trait provides static method [Parseable::parse] and
-//! [Parseable::get_parser] to get a parser instance for parser combination
+//! [Parseable::get_parser] to get a parser instance for parser combination.
+//! Here is an example of [Parseable] class `WS`, which parses whitespace characters.
 //!
 //! [Parseable]: trait.Parseable.html
 //! [Parseable::parse]: trait.Parseable.html#tymethod.parse
 //! [Parseable::get_parser]: trait.Parseable.html#method.get_parser
+//!
+//! ```
+//! use markab_parser::{
+//! 	character_class,
+//! 	character_class_parser::CharacterClassParser,
+//! 	repetition_parser::RepetitionParserError,
+//! 	Parseable,
+//! 	Parser,
+//! 	};
+//!
+//! pub struct WS;
+//!
+//! impl<'a> Parseable<'a> for WS
+//! 	{
+//! 	type Error = RepetitionParserError<'a, CharacterClassParser<'a>>;
+//! 	type Output = ();
+//!
+//! 	fn parse(src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>
+//! 		{
+//! 		character_class(false, &[' ', '\t', '\n', '\r'], &[])
+//! 			.one_or_more()
+//! 			.skip(src, pos)
+//! 		}
+//!
+//! 	fn name() -> &'a str
+//! 		{
+//! 		"WS"
+//! 		}
+//! 	}
+//! ```
 
 pub mod and_parser;
 pub mod character_class_parser;
 pub mod character_parser;
+mod equal;
 mod error;
 pub mod gen_parser;
 pub mod map_parser;

@@ -1,31 +1,31 @@
+use crate::Parser;
 use std::fmt::{
-	Debug,
 	Display,
 	Formatter,
 	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct AndParserRequirement<R>
+pub struct AndParserRequirement<'a, P>
 where
-	R: Debug + Display,
+	P: Parser<'a>,
 {
-	requirement: R,
+	requirement: P::Requirement,
 }
 
-impl<R> AndParserRequirement<R>
+impl<'a, P> AndParserRequirement<'a, P>
 where
-	R: Debug + Display,
+	P: Parser<'a>,
 {
-	pub fn new(requirement: R) -> Self
+	pub fn new(requirement: P::Requirement) -> Self
 	{
 		Self { requirement }
 	}
 }
 
-impl<R> Display for AndParserRequirement<R>
+impl<'a, P> Display for AndParserRequirement<'a, P>
 where
-	R: Debug + Display,
+	P: Parser<'a>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

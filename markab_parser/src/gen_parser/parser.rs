@@ -9,47 +9,39 @@ use either::{
 	Left,
 	Right,
 };
-use std::{
-	fmt::{
-		Debug,
-		Formatter,
-		Result as FmtResult,
-	},
-	marker::PhantomData,
+use std::fmt::{
+	Debug,
+	Formatter,
+	Result as FmtResult,
 };
 
-pub struct GenParser<'a, P, F, Q>
+pub struct GenParser<'a, P1, P2>
 where
-	P: Parser<'a>,
-	F: 'static + Fn(&P::Output) -> Q,
-	Q: Parser<'a>,
+	P1: 'a + Parser<'a>,
+	P2: Parser<'a>,
 {
-	requirement: P,
-	generator: F,
-	_a: PhantomData<&'a ()>,
+	requirement: P1,
+	generator: &'a Fn(&P1::Output) -> P2,
 }
 
-impl<'a, P, F, Q> GenParser<'a, P, F, Q>
+impl<'a, P1, P2> GenParser<'a, P1, P2>
 where
-	P: Parser<'a>,
-	F: 'static + Fn(&P::Output) -> Q,
-	Q: Parser<'a>,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
-	pub fn new(requirement: P, generator: F) -> Self
+	pub fn new(requirement: P1, generator: &'a Fn(&P1::Output) -> P2) -> Self
 	{
 		Self {
 			requirement,
 			generator,
-			_a: PhantomData,
 		}
 	}
 }
 
-impl<'a, P, F, Q> Debug for GenParser<'a, P, F, Q>
+impl<'a, P1, P2> Debug for GenParser<'a, P1, P2>
 where
-	P: Debug + Parser<'a>,
-	F: 'static + Fn(&P::Output) -> Q,
-	Q: Parser<'a>,
+	P1: Debug + Parser<'a>,
+	P2: Parser<'a>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -60,16 +52,15 @@ where
 	}
 }
 
-impl<'a, P, F, Q> Parser<'a> for GenParser<'a, P, F, Q>
+impl<'a, P1, P2> Parser<'a> for GenParser<'a, P1, P2>
 where
-	P: Parser<'a>,
-	F: 'static + Fn(&P::Output) -> Q,
-	Q: Parser<'a>,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
-	type Error = GenParserError<P::Requirement, Q::Requirement, P::Error, Q::Error>;
-	type Output = (P::Output, Q::Output);
-	type Requirement = GenParserRequirement<P::Requirement, Q::Requirement>;
-	type RequirementContext = Q;
+	type Error = GenParserError<'a, P1, P2>;
+	type Output = (P1::Output, P2::Output);
+	type Requirement = GenParserRequirement<'a, P1, P2>;
+	type RequirementContext = P2;
 
 	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>
 	{
@@ -85,18 +76,18 @@ where
 		Ok((res1, res2))
 	}
 
-	fn skip(&self, src: &'a str, pos: &mut usize) -> Option<Self::Error>
+	fn skip(&self, src: &'a str, pos: &mut usize) -> Result<(), Self::Error>
 	{
 		let from = *pos;
 		let res1 = match self.requirement.parse(src, pos)
 		{
 			Ok(ok) => ok,
-			Err(err) => return Some(GenParserError::new(from, self.requirement(None), Left(err))),
+			Err(err) => return Err(GenParserError::new(from, self.requirement(None), Left(err))),
 		};
 		let parser = (self.generator)(&res1);
 		parser
 			.skip(src, pos)
-			.map(|err| GenParserError::new(from, self.requirement(None), Right(err)))
+			.map_err(|err| GenParserError::new(from, self.requirement(None), Right(err)))
 	}
 
 	fn requirement(&self, context: Option<&Self::RequirementContext>) -> Self::Requirement

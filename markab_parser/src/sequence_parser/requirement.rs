@@ -1,45 +1,45 @@
+use crate::Parser;
 use std::fmt::{
-	Debug,
 	Display,
 	Formatter,
 	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct SequenceParserRequirement<R1, R2>
+pub struct SequenceParserRequirement<'a, P1, P2>
 where
-	R1: Debug + Display,
-	R2: Debug + Display,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
-	first: R1,
-	second: R2,
+	first: P1::Requirement,
+	second: P2::Requirement,
 }
 
-impl<R1, R2> SequenceParserRequirement<R1, R2>
+impl<'a, P1, P2> SequenceParserRequirement<'a, P1, P2>
 where
-	R1: Debug + Display,
-	R2: Debug + Display,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
-	pub fn new(first: R1, second: R2) -> Self
+	pub fn new(first: P1::Requirement, second: P2::Requirement) -> Self
 	{
 		Self { first, second }
 	}
 
-	pub fn first(&self) -> &R1
+	pub fn first(&self) -> &P1::Requirement
 	{
 		&self.first
 	}
 
-	pub fn second(&self) -> &R2
+	pub fn second(&self) -> &P2::Requirement
 	{
 		&self.second
 	}
 }
 
-impl<R1, R2> Display for SequenceParserRequirement<R1, R2>
+impl<'a, P1, P2> Display for SequenceParserRequirement<'a, P1, P2>
 where
-	R1: Debug + Display,
-	R2: Debug + Display,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
