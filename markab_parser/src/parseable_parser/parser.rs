@@ -49,7 +49,7 @@ impl<'a, P> Parser<'a> for ParseableParser<'a, P>
 where
 	P: Parseable<'a>,
 {
-	type Error = ParseableParserError<'a>;
+	type Error = ParseableParserError<'a, P>;
 	type Output = P::Output;
 	type Requirement = &'a str;
 	type RequirementContext = ();

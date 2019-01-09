@@ -1,20 +1,27 @@
-use crate::Error;
+use crate::{
+	Error,
+	Parseable,
+};
 use std::fmt::{
 	Display,
 	Formatter,
 	Result as FmtResult,
 };
 
-pub struct ParseableParserError<'a>
+pub struct ParseableParserError<'a, P>
+where
+	P: Parseable<'a>,
 {
 	from: usize,
 	requirement: &'a str,
-	cause: Box<'a + Error>,
+	cause: P::Error,
 }
 
-impl<'a> ParseableParserError<'a>
+impl<'a, P> ParseableParserError<'a, P>
+where
+	P: Parseable<'a>,
 {
-	pub fn new(from: usize, requirement: &'a str, cause: Box<'a + Error>) -> Self
+	pub fn new(from: usize, requirement: &'a str, cause: P::Error) -> Self
 	{
 		Self {
 			from,
@@ -24,7 +31,9 @@ impl<'a> ParseableParserError<'a>
 	}
 }
 
-impl<'a> Error for ParseableParserError<'a>
+impl<'a, P> Error for ParseableParserError<'a, P>
+where
+	P: Parseable<'a>,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -47,7 +56,9 @@ impl<'a> Error for ParseableParserError<'a>
 	}
 }
 
-impl<'a> Display for ParseableParserError<'a>
+impl<'a, P> Display for ParseableParserError<'a, P>
+where
+	P: Parseable<'a>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
