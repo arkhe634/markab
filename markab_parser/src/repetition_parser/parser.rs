@@ -37,9 +37,9 @@ impl<'a, P> Parser<'a> for RepetitionParser<'a, P>
 where
 	P: Parser<'a>,
 {
-	type Error = RepetitionParserError<P::Requirement, P::Error>;
+	type Error = RepetitionParserError<'a, P>;
 	type Output = Vec<P::Output>;
-	type Requirement = RepetitionParserRequirement<P::Requirement>;
+	type Requirement = RepetitionParserRequirement<'a, P>;
 	type RequirementContext = ();
 
 	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>
