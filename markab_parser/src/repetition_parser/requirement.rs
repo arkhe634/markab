@@ -1,6 +1,6 @@
+use crate::Parser;
 use std::{
 	fmt::{
-		Debug,
 		Display,
 		Formatter,
 		Result as FmtResult,
@@ -9,20 +9,20 @@ use std::{
 };
 
 #[derive(Debug)]
-pub struct RepetitionParserRequirement<R>
+pub struct RepetitionParserRequirement<'a, P>
 where
-	R: Debug + Display,
+	P: Parser<'a>,
 {
-	requirement: R,
+	requirement: P::Requirement,
 	min: usize,
 	max: usize,
 }
 
-impl<R> RepetitionParserRequirement<R>
+impl<'a, P> RepetitionParserRequirement<'a, P>
 where
-	R: Debug + Display,
+	P: Parser<'a>,
 {
-	pub fn new(requirement: R, min: usize, max: usize) -> Self
+	pub fn new(requirement: P::Requirement, min: usize, max: usize) -> Self
 	{
 		Self {
 			requirement,
@@ -32,9 +32,9 @@ where
 	}
 }
 
-impl<R> Display for RepetitionParserRequirement<R>
+impl<'a, P> Display for RepetitionParserRequirement<'a, P>
 where
-	R: Debug + Display,
+	P: Parser<'a>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

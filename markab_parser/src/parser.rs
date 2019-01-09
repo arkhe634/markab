@@ -15,7 +15,7 @@ use std::{
 	usize::MAX,
 };
 
-pub trait Parser<'a>
+pub trait Parser<'a>: Debug
 {
 	type Error: Error;
 	type Output;
@@ -24,9 +24,9 @@ pub trait Parser<'a>
 
 	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>;
 
-	fn skip(&self, src: &'a str, pos: &mut usize) -> Option<Self::Error>
+	fn skip(&self, src: &'a str, pos: &mut usize) -> Result<(), Self::Error>
 	{
-		self.parse(src, pos).err()
+		self.parse(src, pos).map(|_| ())
 	}
 
 	fn requirement(&self, context: Option<&Self::RequirementContext>) -> Self::Requirement;
@@ -47,19 +47,16 @@ pub trait Parser<'a>
 		OrderParser::new(self, next)
 	}
 
-	fn map<F, P>(self, mapper: F) -> MapParser<'a, Self, F, P>
+	fn map<R>(self, mapper: &'a Fn(Self::Output) -> R) -> MapParser<'a, Self, R>
 	where
 		Self: Sized,
-		F: 'static + Fn(Self::Output) -> P,
-		P: 'a,
 	{
 		MapParser::new(self, mapper)
 	}
 
-	fn and_gen<F, P>(self, generator: F) -> GenParser<'a, Self, F, P>
+	fn and_gen<P>(self, generator: &'a Fn(&Self::Output) -> P) -> GenParser<'a, Self, P>
 	where
 		Self: Sized,
-		F: 'static + Fn(&Self::Output) -> P,
 		P: Parser<'a>,
 	{
 		GenParser::new(self, generator)

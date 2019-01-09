@@ -1,31 +1,28 @@
 use crate::{
 	and_parser::AndParserRequirement,
 	Error,
+	Parser,
 };
 use std::fmt::{
-	Debug,
-	Display,
 	Formatter,
 	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct AndParserError<R, E>
+pub struct AndParserError<'a, P>
 where
-	R: Debug + Display,
-	E: Error,
+	P: Parser<'a>,
 {
 	from: usize,
-	requirement: AndParserRequirement<R>,
-	cause: E,
+	requirement: AndParserRequirement<'a, P>,
+	cause: P::Error,
 }
 
-impl<R, E> AndParserError<R, E>
+impl<'a, P> AndParserError<'a, P>
 where
-	R: Debug + Display,
-	E: Error,
+	P: Parser<'a>,
 {
-	pub fn new(from: usize, requirement: AndParserRequirement<R>, cause: E) -> Self
+	pub fn new(from: usize, requirement: AndParserRequirement<'a, P>, cause: P::Error) -> Self
 	{
 		Self {
 			from,
@@ -35,10 +32,9 @@ where
 	}
 }
 
-impl<R, E> Error for AndParserError<R, E>
+impl<'a, P> Error for AndParserError<'a, P>
 where
-	R: Debug + Display,
-	E: Error,
+	P: Parser<'a>,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{

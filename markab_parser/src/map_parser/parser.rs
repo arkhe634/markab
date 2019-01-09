@@ -5,44 +5,36 @@ use crate::{
 	},
 	Parser,
 };
-use std::{
-	fmt::{
-		Debug,
-		Formatter,
-		Result as FmtResult,
-	},
-	marker::PhantomData,
+use std::fmt::{
+	Debug,
+	Formatter,
+	Result as FmtResult,
 };
 
-pub struct MapParser<'a, P, F, Q>
+pub struct MapParser<'a, P, R>
 where
-	P: Parser<'a>,
-	F: 'static + Fn(P::Output) -> Q,
+	P: 'a + Parser<'a>,
 {
 	requirement: P,
-	mapper: F,
-	_a: PhantomData<&'a ()>,
+	mapper: &'a Fn(P::Output) -> R,
 }
 
-impl<'a, P, F, Q> MapParser<'a, P, F, Q>
+impl<'a, P, R> MapParser<'a, P, R>
 where
 	P: Parser<'a>,
-	F: 'static + Fn(P::Output) -> Q,
 {
-	pub fn new(requirement: P, mapper: F) -> Self
+	pub fn new(requirement: P, mapper: &'a Fn(P::Output) -> R) -> Self
 	{
 		Self {
 			requirement,
 			mapper,
-			_a: PhantomData,
 		}
 	}
 }
 
-impl<'a, P, F, Q> Debug for MapParser<'a, P, F, Q>
+impl<'a, P, R> Debug for MapParser<'a, P, R>
 where
-	P: Debug + Parser<'a>,
-	F: 'static + Fn(P::Output) -> Q,
+	P: Parser<'a>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -53,14 +45,13 @@ where
 	}
 }
 
-impl<'a, P, F, Q> Parser<'a> for MapParser<'a, P, F, Q>
+impl<'a, P, R> Parser<'a> for MapParser<'a, P, R>
 where
 	P: Parser<'a>,
-	F: 'static + Fn(P::Output) -> Q,
 {
-	type Error = MapParserError<P::Requirement, P::Error>;
-	type Output = Q;
-	type Requirement = MapParserRequirement<P::Requirement>;
+	type Error = MapParserError<'a, P>;
+	type Output = R;
+	type Requirement = MapParserRequirement<'a, P>;
 	type RequirementContext = ();
 
 	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>
@@ -72,16 +63,27 @@ where
 			.map_err(|err| MapParserError::new(from, self.requirement(None), err))
 	}
 
-	fn skip(&self, src: &'a str, pos: &mut usize) -> Option<Self::Error>
+	fn skip(&self, src: &'a str, pos: &mut usize) -> Result<(), Self::Error>
 	{
 		let from = *pos;
 		self.requirement
 			.skip(src, pos)
-			.map(|err| MapParserError::new(from, self.requirement(None), err))
+			.map_err(|err| MapParserError::new(from, self.requirement(None), err))
 	}
 
 	fn requirement(&self, _: Option<&Self::RequirementContext>) -> Self::Requirement
 	{
 		MapParserRequirement::new(self.requirement.requirement(None))
 	}
+}
+
+#[test]
+fn test()
+{
+	use crate::string;
+	let parser = string("test");
+	let parser = parser.map(&|s| s.to_owned());
+	let src = "test";
+	let mut pos = 0;
+	let res = parser.parse(src, &mut pos);
 }

@@ -1,31 +1,29 @@
 use crate::{
 	stringify_parser::StringifyParserRequirement,
 	Error,
+	Parser,
 };
 use std::fmt::{
-	Debug,
 	Display,
 	Formatter,
 	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct StringifyParserError<R, E>
+pub struct StringifyParserError<'a, P>
 where
-	R: Debug + Display,
-	E: Error,
+	P: Parser<'a>,
 {
 	from: usize,
-	requirement: StringifyParserRequirement<R>,
-	err: E,
+	requirement: StringifyParserRequirement<'a, P>,
+	err: P::Error,
 }
 
-impl<R, E> StringifyParserError<R, E>
+impl<'a, P> StringifyParserError<'a, P>
 where
-	R: Debug + Display,
-	E: Error,
+	P: Parser<'a>,
 {
-	pub fn new(from: usize, requirement: StringifyParserRequirement<R>, err: E) -> Self
+	pub fn new(from: usize, requirement: StringifyParserRequirement<'a, P>, err: P::Error) -> Self
 	{
 		Self {
 			from,
@@ -35,10 +33,9 @@ where
 	}
 }
 
-impl<R, E> Error for StringifyParserError<R, E>
+impl<'a, P> Error for StringifyParserError<'a, P>
 where
-	R: Debug + Display,
-	E: Error,
+	P: Parser<'a>,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -66,10 +63,9 @@ where
 	}
 }
 
-impl<R, E> Display for StringifyParserError<R, E>
+impl<'a, P> Display for StringifyParserError<'a, P>
 where
-	R: Debug + Display,
-	E: Error,
+	P: Parser<'a>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

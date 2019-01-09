@@ -1,31 +1,29 @@
 use crate::{
 	map_parser::MapParserRequirement,
 	Error,
+	Parser,
 };
 use std::fmt::{
-	Debug,
 	Display,
 	Formatter,
 	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct MapParserError<R, E>
+pub struct MapParserError<'a, P>
 where
-	R: Debug + Display,
-	E: Error,
+	P: Parser<'a>,
 {
 	from: usize,
-	requirement: MapParserRequirement<R>,
-	cause: E,
+	requirement: MapParserRequirement<'a, P>,
+	cause: P::Error,
 }
 
-impl<R, E> MapParserError<R, E>
+impl<'a, P> MapParserError<'a, P>
 where
-	R: Debug + Display,
-	E: Error,
+	P: Parser<'a>,
 {
-	pub fn new(from: usize, requirement: MapParserRequirement<R>, cause: E) -> Self
+	pub fn new(from: usize, requirement: MapParserRequirement<'a, P>, cause: P::Error) -> Self
 	{
 		Self {
 			from,
@@ -35,10 +33,9 @@ where
 	}
 }
 
-impl<R, E> Error for MapParserError<R, E>
+impl<'a, P> Error for MapParserError<'a, P>
 where
-	R: Debug + Display,
-	E: Error,
+	P: Parser<'a>,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -66,10 +63,9 @@ where
 	}
 }
 
-impl<R, E> Display for MapParserError<R, E>
+impl<'a, P> Display for MapParserError<'a, P>
 where
-	R: Debug + Display,
-	E: Error,
+	P: Parser<'a>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

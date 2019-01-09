@@ -33,9 +33,9 @@ impl<'a, P> Parser<'a> for NotParser<'a, P>
 where
 	P: Parser<'a>,
 {
-	type Error = NotParserError<P::Requirement, P::Output>;
+	type Error = NotParserError<'a, P>;
 	type Output = P::Error;
-	type Requirement = NotParserRequirement<P::Requirement>;
+	type Requirement = NotParserRequirement<'a, P>;
 	type RequirementContext = ();
 
 	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>

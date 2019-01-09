@@ -5,13 +5,14 @@ use crate::{
 
 pub trait Parseable<'a>
 {
+	type Error: Error;
 	type Output;
 
-	fn parse(src: &'a str, pos: &mut usize) -> Result<Self::Output, Box<'a + Error>>;
+	fn parse(src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>;
 
-	fn skip(src: &'a str, pos: &mut usize) -> Option<Box<'a + Error>>
+	fn skip(src: &'a str, pos: &mut usize) -> Result<(), Self::Error>
 	{
-		Self::parse(src, pos).err()
+		Self::parse(src, pos).map(|_| ())
 	}
 
 	fn name() -> &'a str;
