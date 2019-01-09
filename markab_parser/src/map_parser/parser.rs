@@ -5,6 +5,11 @@ use crate::{
 	},
 	Parser,
 };
+use std::fmt::{
+	Debug,
+	Formatter,
+	Result as FmtResult,
+};
 
 pub struct MapParser<'a, P, Q>
 where
@@ -25,6 +30,19 @@ where
 			mapper,
 			// 	_a: PhantomData,
 		}
+	}
+}
+
+impl<'a, P, Q> Debug for MapParser<'a, P, Q>
+where
+	P: Parser<'a>,
+{
+	fn fmt(&self, f: &mut Formatter) -> FmtResult
+	{
+		f.debug_struct("MapParser")
+			.field("requirement", &self.requirement)
+			.field("mapper", &"..")
+			.finish()
 	}
 }
 

@@ -15,7 +15,7 @@ use std::{
 	usize::MAX,
 };
 
-pub trait Parser<'a>
+pub trait Parser<'a>: Debug
 {
 	type Error: Error;
 	type Output;
