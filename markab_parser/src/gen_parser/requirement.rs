@@ -1,26 +1,26 @@
+use crate::Parser;
 use std::fmt::{
-	Debug,
 	Display,
 	Formatter,
 	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct GenParserRequirement<R1, R2>
+pub struct GenParserRequirement<'a, P1, P2>
 where
-	R1: Debug + Display,
-	R2: Debug + Display,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
-	requirement: R1,
-	generated: Option<R2>,
+	requirement: P1::Requirement,
+	generated: Option<P2::Requirement>,
 }
 
-impl<R1, R2> GenParserRequirement<R1, R2>
+impl<'a, P1, P2> GenParserRequirement<'a, P1, P2>
 where
-	R1: Debug + Display,
-	R2: Debug + Display,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
-	pub fn new(requirement: R1, generated: Option<R2>) -> Self
+	pub fn new(requirement: P1::Requirement, generated: Option<P2::Requirement>) -> Self
 	{
 		Self {
 			requirement,
@@ -28,21 +28,21 @@ where
 		}
 	}
 
-	pub fn first(&self) -> &R1
+	pub fn first(&self) -> &P1::Requirement
 	{
 		&self.requirement
 	}
 
-	pub fn second(&self) -> Option<&R2>
+	pub fn second(&self) -> Option<&P2::Requirement>
 	{
 		self.generated.as_ref()
 	}
 }
 
-impl<R1, R2> Display for GenParserRequirement<R1, R2>
+impl<'a, P1, P2> Display for GenParserRequirement<'a, P1, P2>
 where
-	R1: Debug + Display,
-	R2: Debug + Display,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{

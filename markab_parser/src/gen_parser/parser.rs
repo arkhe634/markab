@@ -9,44 +9,39 @@ use either::{
 	Left,
 	Right,
 };
-use std::{
-	fmt::{
-		Debug,
-		Formatter,
-		Result as FmtResult,
-	},
-	marker::PhantomData,
+use std::fmt::{
+	Debug,
+	Formatter,
+	Result as FmtResult,
 };
 
-pub struct GenParser<'a, P, Q>
+pub struct GenParser<'a, P1, P2>
 where
-	P: 'a + Parser<'a>,
-	Q: Parser<'a>,
+	P1: 'a + Parser<'a>,
+	P2: Parser<'a>,
 {
-	requirement: P,
-	generator: &'a Fn(&P::Output) -> Q,
-	_a: PhantomData<&'a ()>,
+	requirement: P1,
+	generator: &'a Fn(&P1::Output) -> P2,
 }
 
-impl<'a, P, Q> GenParser<'a, P, Q>
+impl<'a, P1, P2> GenParser<'a, P1, P2>
 where
-	P: Parser<'a>,
-	Q: Parser<'a>,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
-	pub fn new(requirement: P, generator: &'a Fn(&P::Output) -> Q) -> Self
+	pub fn new(requirement: P1, generator: &'a Fn(&P1::Output) -> P2) -> Self
 	{
 		Self {
 			requirement,
 			generator,
-			_a: PhantomData,
 		}
 	}
 }
 
-impl<'a, P, Q> Debug for GenParser<'a, P, Q>
+impl<'a, P1, P2> Debug for GenParser<'a, P1, P2>
 where
-	P: Debug + Parser<'a>,
-	Q: Parser<'a>,
+	P1: Debug + Parser<'a>,
+	P2: Parser<'a>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -57,15 +52,15 @@ where
 	}
 }
 
-impl<'a, P, Q> Parser<'a> for GenParser<'a, P, Q>
+impl<'a, P1, P2> Parser<'a> for GenParser<'a, P1, P2>
 where
-	P: Parser<'a>,
-	Q: Parser<'a>,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
-	type Error = GenParserError<P::Requirement, Q::Requirement, P::Error, Q::Error>;
-	type Output = (P::Output, Q::Output);
-	type Requirement = GenParserRequirement<P::Requirement, Q::Requirement>;
-	type RequirementContext = Q;
+	type Error = GenParserError<'a, P1, P2>;
+	type Output = (P1::Output, P2::Output);
+	type Requirement = GenParserRequirement<'a, P1, P2>;
+	type RequirementContext = P2;
 
 	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>
 	{
