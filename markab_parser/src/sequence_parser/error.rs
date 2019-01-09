@@ -1,6 +1,7 @@
 use crate::{
 	sequence_parser::requirement::SequenceParserRequirement,
 	Error,
+	Parser,
 };
 use either::{
 	Either,
@@ -8,36 +9,31 @@ use either::{
 	Right,
 };
 use std::fmt::{
-	Debug,
 	Display,
 	Formatter,
 	Result as FmtResult,
 };
 
 #[derive(Debug)]
-pub struct SequenceParserError<R1, R2, E1, E2>
+pub struct SequenceParserError<'a, P1, P2>
 where
-	R1: Debug + Display,
-	R2: Debug + Display,
-	E1: Error,
-	E2: Error,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
 	from: usize,
-	requirement: SequenceParserRequirement<R1, R2>,
-	cause: Either<E1, E2>,
+	requirement: SequenceParserRequirement<'a, P1, P2>,
+	cause: Either<P1::Error, P2::Error>,
 }
 
-impl<R1, R2, E1, E2> SequenceParserError<R1, R2, E1, E2>
+impl<'a, P1, P2> SequenceParserError<'a, P1, P2>
 where
-	R1: Debug + Display,
-	R2: Debug + Display,
-	E1: Error,
-	E2: Error,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
 	pub fn new(
 		from: usize,
-		requirement: SequenceParserRequirement<R1, R2>,
-		cause: Either<E1, E2>,
+		requirement: SequenceParserRequirement<'a, P1, P2>,
+		cause: Either<P1::Error, P2::Error>,
 	) -> Self
 	{
 		Self {
@@ -48,12 +44,10 @@ where
 	}
 }
 
-impl<R1, R2, E1, E2> Error for SequenceParserError<R1, R2, E1, E2>
+impl<'a, P1, P2> Error for SequenceParserError<'a, P1, P2>
 where
-	R1: Debug + Display,
-	R2: Debug + Display,
-	E1: Error,
-	E2: Error,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
 	fn from(&self, f: &mut Formatter) -> FmtResult
 	{
@@ -84,12 +78,10 @@ where
 	}
 }
 
-impl<R1, R2, E1, E2> Display for SequenceParserError<R1, R2, E1, E2>
+impl<'a, P1, P2> Display for SequenceParserError<'a, P1, P2>
 where
-	R1: Debug + Display,
-	R2: Debug + Display,
-	E1: Error,
-	E2: Error,
+	P1: Parser<'a>,
+	P2: Parser<'a>,
 {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult
 	{
