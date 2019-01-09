@@ -33,9 +33,9 @@ impl<'a, P> Parser<'a> for StringifyParser<'a, P>
 where
 	P: Parser<'a>,
 {
-	type Error = StringifyParserError<P::Requirement, P::Error>;
+	type Error = StringifyParserError<'a, P>;
 	type Output = &'a str;
-	type Requirement = StringifyParserRequirement<P::Requirement>;
+	type Requirement = StringifyParserRequirement<'a, P>;
 	type RequirementContext = ();
 
 	fn parse(&self, src: &'a str, pos: &mut usize) -> Result<Self::Output, Self::Error>
