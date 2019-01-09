@@ -80,3 +80,10 @@ Parseable trait provides static method `Parseable::parse` and
 
 + simplify lifetimes.
 + remove Error type from Parseable trait.(with boxing cost)
+
+## Version 0.7.0
+
++ remove functional parameter type from MapParser/GenParser.
++ Requirement/Error types has come to require Parser types as parameter.
++ add Error type to Parseable.(no more boxing)
++ add merge method to OrderParser.
